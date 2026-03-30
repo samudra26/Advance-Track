@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Dashboard Monitoring</title>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<style>
+body{margin:0;font-family:sans-serif;}
+.container{display:flex;height:100vh;}
+#map{flex:3;}
+.sidebar{flex:1;padding:10px;background:#f4f6f9;}
+.card{background:white;padding:10px;margin-bottom:10px;border-radius:10px;}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <div id="map"></div>
+
+  <div class="sidebar">
+    <div class="card">
+      Total User: <span id="totalUser">0</span>
+    </div>
+
+    <div class="card">
+      Lat: <span id="dLat">-</span><br>
+      Lon: <span id="dLon">-</span>
+    </div>
+  </div>
+</div>
+
+<script type="module" src="js/dashboard.js"></script>
+</body>
+</html>
