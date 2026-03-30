@@ -4,7 +4,7 @@ import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/12
 const firebaseConfig = {
   apiKey: "AIzaSyABOVyC5Uz3Q_85609kvfwdYgdZcSFHBwE",
   authDomain: "tes-hackaton.firebaseapp.com",
-  databaseURL: "https://tes-hackaton-default-rtdb.firebaseio.com",
+  databaseURL: "https://tes-hackaton-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "tes-hackaton",
   storageBucket: "tes-hackaton.firebasestorage.app",
   messagingSenderId: "382466846609",
