@@ -73,14 +73,4 @@ onValue(ref(db, 'users'), snap => {
   // UPDATE TOTAL USER
   document.getElementById("totalUser").innerText = count;
 
-});      map.flyTo(latLng, 17);
-      markers[id].openPopup();
-    };
-
-    list.appendChild(li);
-  }
-
-});    list.appendChild(li);
-  }
-
 });
