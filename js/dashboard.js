@@ -1,106 +1,79 @@
+// IMPORT FIREBASE
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
 import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
 
-/* ✅ FIREBASE CONFIG (FIX REGION) */
+// CONFIG (SUDAH FIX REGION)
 const firebaseConfig = {
   apiKey: "AIzaSyABOVyC5Uz3Q_85609kvfwdYgdZcSFHBwE",
   authDomain: "tes-hackaton.firebaseapp.com",
   databaseURL: "https://tes-hackaton-default-rtdb.asia-southeast1.firebasedatabase.app",
   projectId: "tes-hackaton",
-  storageBucket: "tes-hackaton.appspot.com",
+  storageBucket: "tes-hackaton.firebasestorage.app",
   messagingSenderId: "382466846609",
   appId: "1:382466846609:web:c13ac92dac7250bb243430"
 };
 
+// INIT FIREBASE
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-/* MAP */
-const map = L.map('map').setView([-2.5, 118], 5);
+// INIT MAP
+const map = L.map('map').setView([-6.2, 106.8], 5);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  maxZoom: 18
+  attribution: '© OpenStreetMap'
 }).addTo(map);
 
+// MARKER STORAGE
 const markers = {};
-const circles = {};
 
-/* REALTIME */
+// REALTIME LISTENER
 onValue(ref(db, 'users'), snap => {
 
   const users = snap.val();
-  const list = document.getElementById("userList");
 
-  list.innerHTML = "";
+  console.log("🔥 DATA FIREBASE:", users);
 
-  if (!users) {
-    document.getElementById("totalUser").innerText = 0;
-    return;
-  }
+  if (!users) return;
 
-  /* ✅ FIX TOTAL USER */
-  const total = Object.keys(users).length;
-  document.getElementById("totalUser").innerText = total + " active";
+  let count = 0;
 
   for (let id in users) {
 
-    if (!users[id].history) continue;
-
     const history = users[id].history;
+
+    if (!history) continue;
+
+    // AMBIL DATA TERAKHIR (FIX UTAMA)
     const keys = Object.keys(history);
-    if (keys.length === 0) continue;
+    const lastKey = keys[keys.length - 1];
+    const last = history[lastKey];
 
-    const last = history[keys[keys.length - 1]];
+    if (!last || !last.lat || !last.lon) continue;
 
-    const lat = last.lat;
-    const lon = last.lon;
-    const acc = last.acc;
-    const time = new Date(last.time).toLocaleString();
+    const latLng = [last.lat, last.lon];
 
-    const latLng = [lat, lon];
-
-    /* MARKER */
+    // BUAT / UPDATE MARKER
     if (!markers[id]) {
       markers[id] = L.marker(latLng).addTo(map);
     } else {
       markers[id].setLatLng(latLng);
     }
 
-    /* CIRCLE */
-    if (!circles[id]) {
-      circles[id] = L.circle(latLng, {
-        radius: acc,
-        color: 'blue',
-        fillOpacity: 0.2
-      }).addTo(map);
-    } else {
-      circles[id].setLatLng(latLng);
-      circles[id].setRadius(acc);
-    }
+    // UPDATE INFO PANEL
+    document.getElementById("dLat").innerText = last.lat.toFixed(5);
+    document.getElementById("dLon").innerText = last.lon.toFixed(5);
 
-    /* POPUP */
-    markers[id].bindPopup(`
-      <b>${id}</b><br>
-      Lat: ${lat}<br>
-      Lon: ${lon}<br>
-      Acc: ${acc} m<br>
-      Time: ${time}
-    `);
+    // BONUS: AUTO ZOOM KE USER
+    map.setView(latLng, 15);
 
-    /* SIDEBAR */
-    let li = document.createElement("li");
-    li.className = "card";
+    count++;
+  }
 
-    li.innerHTML = `
-      <b>${id}</b><br>
-      📍 ${lat.toFixed(5)}, ${lon.toFixed(5)}<br>
-      🎯 ${acc} m<br>
-      🕒 ${time}
-    `;
+  // UPDATE TOTAL USER
+  document.getElementById("totalUser").innerText = count;
 
-    /* 🔥 CLICK → FOCUS MAP */
-    li.onclick = () => {
-      map.flyTo(latLng, 17);
+});      map.flyTo(latLng, 17);
       markers[id].openPopup();
     };
 
