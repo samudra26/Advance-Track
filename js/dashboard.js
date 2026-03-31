@@ -1,7 +1,5 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
-import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
-
-/* ✅ FIREBASE CONFIG (FIX REGION) */
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js"
 const firebaseConfig = {
   apiKey: "AIzaSyABOVyC5Uz3Q_85609kvfwdYgdZcSFHBwE",
   authDomain: "tes-hackaton.firebaseapp.com",
@@ -15,7 +13,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-/* MAP */
 const map = L.map('map').setView([-2.5, 118], 5);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -25,7 +22,6 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 const markers = {};
 const circles = {};
 
-/* REALTIME */
 onValue(ref(db, 'users'), snap => {
 
   const users = snap.val();
@@ -37,8 +33,7 @@ onValue(ref(db, 'users'), snap => {
     document.getElementById("totalUser").innerText = 0;
     return;
   }
-
-  /* ✅ FIX TOTAL USER */
+  
   const total = Object.keys(users).length;
   document.getElementById("totalUser").innerText = total + " active";
 
@@ -59,14 +54,12 @@ onValue(ref(db, 'users'), snap => {
 
     const latLng = [lat, lon];
 
-    /* MARKER */
     if (!markers[id]) {
       markers[id] = L.marker(latLng).addTo(map);
     } else {
       markers[id].setLatLng(latLng);
     }
 
-    /* CIRCLE */
     if (!circles[id]) {
       circles[id] = L.circle(latLng, {
         radius: acc,
@@ -78,7 +71,6 @@ onValue(ref(db, 'users'), snap => {
       circles[id].setRadius(acc);
     }
 
-    /* POPUP */
     markers[id].bindPopup(`
       <b>${id}</b><br>
       Lat: ${lat}<br>
@@ -87,7 +79,6 @@ onValue(ref(db, 'users'), snap => {
       Time: ${time}
     `);
 
-    /* SIDEBAR */
     let li = document.createElement("li");
     li.className = "card";
 
@@ -98,13 +89,15 @@ onValue(ref(db, 'users'), snap => {
       🕒 ${time}
     `;
 
-    /* 🔥 CLICK → FOCUS MAP */
     li.onclick = () => {
       map.flyTo(latLng, 17);
       markers[id].openPopup();
     };
 
     list.appendChild(li);
+  }
+
+});    list.appendChild(li);
   }
 
 });
