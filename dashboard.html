@@ -35,6 +35,13 @@
       border-radius: 10px;
       margin-bottom: 10px;
       font-size: 12px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .card:hover {
+      transform: scale(1.02);
+      background: #f1f5f9;
     }
 
     ul {
@@ -88,23 +95,92 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 let markers = {};
 let circles = {};
 
-/* REALTIME DATA */
+/* REALTIME */
 onValue(ref(db, "users"), (snapshot) => {
 
   const data = snapshot.val();
   const userList = document.getElementById("userList");
   userList.innerHTML = "";
 
-  let total = 0;
+  /* HANDLE NULL */
+  if (!data) {
+    document.getElementById("totalUser").innerText = 0;
+    return;
+  }
+
+  /* ✅ FIX TOTAL USER */
+  const total = Object.keys(data).length;
+  document.getElementById("totalUser").innerText = total + " active";
 
   for (let userId in data) {
-    total++;
+
+    if (!data[userId].history) continue;
 
     let history = data[userId].history;
-    let lastKey = Object.keys(history).pop();
+    let keys = Object.keys(history);
+    if (keys.length === 0) continue;
+
+    let lastKey = keys[keys.length - 1];
     let d = history[lastKey];
 
     let lat = d.lat;
+    let lon = d.lon;
+    let acc = d.acc;
+    let time = new Date(d.time).toLocaleString();
+
+    /* MARKER */
+    if (markers[userId]) {
+      markers[userId].setLatLng([lat, lon]);
+    } else {
+      markers[userId] = L.marker([lat, lon]).addTo(map);
+    }
+
+    /* CIRCLE */
+    if (circles[userId]) {
+      circles[userId].setLatLng([lat, lon]);
+      circles[userId].setRadius(acc);
+    } else {
+      circles[userId] = L.circle([lat, lon], {
+        radius: acc,
+        color: 'blue',
+        fillOpacity: 0.2
+      }).addTo(map);
+    }
+
+    /* POPUP */
+    markers[userId].bindPopup(`
+      <b>${userId}</b><br>
+      Lat: ${lat}<br>
+      Lon: ${lon}<br>
+      Acc: ${acc} m<br>
+      Time: ${time}
+    `);
+
+    /* SIDEBAR LIST */
+    let li = document.createElement("li");
+    li.className = "card";
+
+    li.innerHTML = `
+      <b>${userId}</b><br>
+      📍 ${lat.toFixed(5)}, ${lon.toFixed(5)}<br>
+      🎯 ${acc} m<br>
+      🕒 ${time}
+    `;
+
+    /* 🔥 CLICK → FOCUS MAP */
+    li.onclick = () => {
+      map.flyTo([lat, lon], 17);
+      markers[userId].openPopup();
+    };
+
+    userList.appendChild(li);
+  }
+
+});
+</script>
+
+</body>
+</html>    let lat = d.lat;
     let lon = d.lon;
     let acc = d.acc;
     let time = new Date(d.time).toLocaleString();
