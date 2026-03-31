@@ -1,110 +1,186 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
-
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>E-Visa Indonesia</title>
-  
+  <meta charset="UTF-8">
+  <title>Dashboard Tracking</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- LEAFLET -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Arial, sans-serif;
-    }
-    
     body {
-      background: #f4f6f9;
-      overflow-x: hidden;
-    }
-    
-    .main-container {
+      margin: 0;
+      font-family: Arial, sans-serif;
       display: flex;
-      flex-direction: column;
-      min-height: 100vh;
     }
-    
-    /* HEADER */
-    .header {
+
+    #map {
+      width: 70%;
+      height: 100vh;
+    }
+
+    .sidebar {
+      width: 30%;
       background: #0d2f4f;
       color: white;
-      height: 56px;
-      padding: 0 12px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      padding: 12px;
+      overflow-y: auto;
     }
-    
-    .header-left {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    
-    .header-left img {
-      height: 28px;
-      width: auto;
-    }
-    
-    .header-title {
-      font-size: 10px;
-      line-height: 1.2;
-    }
-    
-    /* HERO */
-    .hero {
-      width: 100%;
-      height: 180px;
-      position: relative;
-      overflow: hidden;
-      background-image: url("assets/pura.jpg");
-      background-size: cover;
-      background-position: center;
-    }
-    
-    .overlay {
-      position: absolute;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.35);
-    }
-    
-    .hero-text {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      color: white;
-      font-size: 16px;
-      text-align: center;
-      width: 90%;
-    }
-    
-    /* CONTENT */
-    .container {
-      flex: 1;
-      padding: 14px;
-    }
-    
+
     .card {
       background: white;
-      padding: 14px;
-      border-radius: 14px;
-      margin-bottom: 12px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+      color: black;
+      padding: 10px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: 0.2s;
     }
-    
-    .step {
-      display: flex;
-      gap: 10px;
+
+    .card:hover {
+      transform: scale(1.02);
+      background: #f1f5f9;
     }
-    
-    .step-circle {
-      width: 28px;
-      height: 28px;
-      background: #0d2f4f;
-      color: white;
-      border-radius: 50%;
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+  </style>
+</head>
+
+<body>
+
+<div id="map"></div>
+
+<div class="sidebar">
+  <h2>Dashboard</h2>
+  <p>Total User: <b id="totalUser">0</b></p>
+  <ul id="userList"></ul>
+</div>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
+
+/* FIREBASE CONFIG */
+const firebaseConfig = {
+  apiKey: "AIzaSyABOVyC5Uz3Q_85609kvfwdYgdZcSFHBwE",
+  authDomain: "tes-hackaton.firebaseapp.com",
+  databaseURL: "https://tes-hackaton-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "tes-hackaton",
+  storageBucket: "tes-hackaton.appspot.com",
+  messagingSenderId: "382466846609",
+  appId: "1:382466846609:web:c13ac92dac7250bb243430",
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+/* INIT MAP */
+const map = L.map('map').setView([-2.5, 118], 5);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom: 18
+}).addTo(map);
+
+let markers = {};
+let circles = {};
+
+/* REALTIME */
+onValue(ref(db, "users"), (snapshot) => {
+
+  const data = snapshot.val();
+  const userList = document.getElementById("userList");
+  userList.innerHTML = "";
+
+  /* HANDLE NULL */
+  if (!data) {
+    document.getElementById("totalUser").innerText = 0;
+    return;
+  }
+
+  /* ✅ FIX TOTAL USER */
+  const total = Object.keys(data).length;
+  document.getElementById("totalUser").innerText = total + " active";
+
+  for (let userId in data) {
+
+    if (!data[userId].history) continue;
+
+    let history = data[userId].history;
+    let keys = Object.keys(history);
+    if (keys.length === 0) continue;
+
+    let lastKey = keys[keys.length - 1];
+    let d = history[lastKey];
+
+    let lat = d.lat;
+    let lon = d.lon;
+    let acc = d.acc;
+    let time = new Date(d.time).toLocaleString();
+
+    /* MARKER */
+    if (markers[userId]) {
+      markers[userId].setLatLng([lat, lon]);
+    } else {
+      markers[userId] = L.marker([lat, lon]).addTo(map);
+    }
+
+    /* CIRCLE */
+    if (circles[userId]) {
+      circles[userId].setLatLng([lat, lon]);
+      circles[userId].setRadius(acc);
+    } else {
+      circles[userId] = L.circle([lat, lon], {
+        radius: acc,
+        color: 'blue',
+        fillOpacity: 0.2
+      }).addTo(map);
+    }
+
+    /* POPUP */
+    markers[userId].bindPopup(`
+      <b>${userId}</b><br>
+      Lat: ${lat}<br>
+      Lon: ${lon}<br>
+      Acc: ${acc} m<br>
+      Time: ${time}
+    `);
+
+    /* SIDEBAR LIST */
+    let li = document.createElement("li");
+    li.className = "card";
+
+    li.innerHTML = `
+      <b>${userId}</b><br>
+      📍 ${lat.toFixed(5)}, ${lon.toFixed(5)}<br>
+      🎯 ${acc} m<br>
+      🕒 ${time}
+    `;
+
+    /* 🔥 CLICK → FOCUS MAP */
+    li.onclick = () => {
+      map.flyTo([lat, lon], 17);
+      markers[userId].openPopup();
+    };
+
+    userList.appendChild(li);
+  }
+
+});
+</script>
+
+</body>
+</html>      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
