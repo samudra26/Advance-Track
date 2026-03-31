@@ -1,38 +1,160 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-<meta charset="UTF-8">
-<title>Dashboard Monitoring</title>
+  <meta charset="UTF-8">
+  <title>Dashboard Tracking</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <!-- LEAFLET -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 
-<style>
-body{margin:0;font-family:sans-serif;}
-.container{display:flex;height:100vh;}
-#map{flex:3;}
-.sidebar{flex:1;padding:10px;background:#f4f6f9;}
-.card{background:white;padding:10px;margin-bottom:10px;border-radius:10px;}
-</style>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+    }
+
+    #map {
+      width: 70%;
+      height: 100vh;
+    }
+
+    .sidebar {
+      width: 30%;
+      background: #0d2f4f;
+      color: white;
+      padding: 12px;
+      overflow-y: auto;
+    }
+
+    .card {
+      background: white;
+      color: black;
+      padding: 10px;
+      border-radius: 10px;
+      margin-bottom: 10px;
+      font-size: 12px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+  </style>
 </head>
 
 <body>
 
-<div class="container">
-  <div id="map"></div>
+<div id="map"></div>
 
-  <div class="sidebar">
-    <div class="card">
-      Total User: <span id="totalUser">0</span>
-    </div>
-
-    <div class="card">
-      Lat: <span id="dLat">-</span><br>
-      Lon: <span id="dLon">-</span>
-    </div>
-  </div>
+<div class="sidebar">
+  <h2>Dashboard</h2>
+  <p>Total User: <b id="totalUser">0</b></p>
+  <ul id="userList"></ul>
 </div>
 
-<script type="module" src="js/dashboard.js"></script>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
+
+/* FIREBASE CONFIG */
+const firebaseConfig = {
+  apiKey: "AIzaSyABOVyC5Uz3Q_85609kvfwdYgdZcSFHBwE",
+  authDomain: "tes-hackaton.firebaseapp.com",
+  databaseURL: "https://tes-hackaton-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "tes-hackaton",
+  storageBucket: "tes-hackaton.appspot.com",
+  messagingSenderId: "382466846609",
+  appId: "1:382466846609:web:c13ac92dac7250bb243430",
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+/* INIT MAP */
+const map = L.map('map').setView([-2.5, 118], 5);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom: 18
+}).addTo(map);
+
+let markers = {};
+let circles = {};
+
+/* REALTIME DATA */
+onValue(ref(db, "users"), (snapshot) => {
+
+  const data = snapshot.val();
+  const userList = document.getElementById("userList");
+  userList.innerHTML = "";
+
+  let total = 0;
+
+  for (let userId in data) {
+    total++;
+
+    let history = data[userId].history;
+    let lastKey = Object.keys(history).pop();
+    let d = history[lastKey];
+
+    let lat = d.lat;
+    let lon = d.lon;
+    let acc = d.acc;
+    let time = new Date(d.time).toLocaleString();
+
+    /* MARKER UPDATE */
+    if (markers[userId]) {
+      markers[userId].setLatLng([lat, lon]);
+    } else {
+      markers[userId] = L.marker([lat, lon]).addTo(map);
+    }
+
+    /* CIRCLE AKURASI */
+    if (circles[userId]) {
+      circles[userId].setLatLng([lat, lon]);
+      circles[userId].setRadius(acc);
+    } else {
+      circles[userId] = L.circle([lat, lon], {
+        radius: acc,
+        color: 'blue',
+        fillOpacity: 0.2
+      }).addTo(map);
+    }
+
+    /* POPUP */
+    markers[userId].bindPopup(`
+      <b>${userId}</b><br>
+      Lat: ${lat}<br>
+      Lon: ${lon}<br>
+      Acc: ${acc} m<br>
+      Time: ${time}
+    `);
+
+    /* SIDEBAR */
+    let li = document.createElement("li");
+    li.className = "card";
+
+    li.innerHTML = `
+      <b>${userId}</b><br>
+      📍 ${lat.toFixed(5)}, ${lon.toFixed(5)}<br>
+      🎯 ${acc} m<br>
+      🕒 ${time}
+    `;
+
+    userList.appendChild(li);
+  }
+
+  document.getElementById("totalUser").innerText = total;
+
+});
+</script>
+
 </body>
 </html>
