@@ -3,88 +3,22 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Geolocation Dashboard</title><link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script><!-- Google Font --><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet"><style>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet"><style>
 *{box-sizing:border-box;}
-body{
-  margin:0;
-  font-family:'Inter',sans-serif;
-  background:#0f172a;
-  color:#e2e8f0;
-}
-
-.container{
-  display:flex;
-  height:100vh;
-}
-
-#map{
-  flex:3;
-  border-right:1px solid rgba(255,255,255,0.1);
-}
-
-.sidebar{
-  flex:1;
-  padding:20px;
-  background:linear-gradient(180deg,#020617,#0f172a);
-  display:flex;
-  flex-direction:column;
-  gap:15px;
-}
-
-.header{
-  font-size:18px;
-  font-weight:600;
-  margin-bottom:10px;
-}
-
-.card{
-  background:rgba(255,255,255,0.05);
-  padding:15px;
-  border-radius:16px;
-  backdrop-filter:blur(10px);
-  border:1px solid rgba(255,255,255,0.08);
-  box-shadow:0 10px 30px rgba(0,0,0,0.3);
-  transition:0.3s;
-}
-
-.card:hover{
-  transform:translateY(-3px);
-  box-shadow:0 15px 40px rgba(0,0,0,0.5);
-}
-
-.metric{
-  font-size:26px;
-  font-weight:600;
-  margin-top:5px;
-}
-
-.label{
-  font-size:12px;
-  color:#94a3b8;
-}
-
-.status{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.dot{
-  width:10px;
-  height:10px;
-  border-radius:50%;
-  background:#22c55e;
-  box-shadow:0 0 10px #22c55e;
-}
-
-.footer{
-  margin-top:auto;
-  font-size:11px;
-  color:#64748b;
-  text-align:center;
-}
-
-</style></head><body><div class="container">
+body{margin:0;font-family:'Inter',sans-serif;background:#0f172a;color:#e2e8f0;}
+.container{display:flex;height:100vh;}
+#map{flex:3;border-right:1px solid rgba(255,255,255,0.1);} 
+.sidebar{flex:1;padding:20px;background:linear-gradient(180deg,#020617,#0f172a);display:flex;flex-direction:column;gap:15px;}
+.header{font-size:18px;font-weight:600;margin-bottom:10px;}
+.card{background:rgba(255,255,255,0.05);padding:15px;border-radius:16px;backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.08);box-shadow:0 10px 30px rgba(0,0,0,0.3);transition:0.3s;}
+.card:hover{transform:translateY(-3px);box-shadow:0 15px 40px rgba(0,0,0,0.5);} 
+.metric{font-size:26px;font-weight:600;margin-top:5px;}
+.label{font-size:12px;color:#94a3b8;}
+.status{display:flex;align-items:center;gap:10px;}
+.dot{width:10px;height:10px;border-radius:50%;background:#22c55e;box-shadow:0 0 10px #22c55e;}
+.footer{margin-top:auto;font-size:11px;color:#64748b;text-align:center;}
+</style></head><body>
+<div class="container">
   <div id="map"></div>  <div class="sidebar">
     <div class="header">🌍 Geo Monitoring</div><div class="card">
   <div class="label">Total Active Users</div>
@@ -92,7 +26,7 @@ body{
 </div>
 
 <div class="card">
-  <div class="label">Current Coordinates</div>
+  <div class="label">Last Coordinates</div>
   <div class="metric">
     <span id="dLat">-</span>,
     <span id="dLon">-</span>
@@ -103,8 +37,77 @@ body{
   <div class="label">System Status</div>
   <div class="status">
     <div class="dot"></div>
-    <span>Online</span>
+    <span>Realtime Active</span>
   </div>
+</div>
+
+<div class="footer">Microservices Geolocation Dashboard v3.0</div>
+
+  </div>
+</div><script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
+
+// ✅ FIX: SAMAKAN REGION DATABASE
+const firebaseConfig = {
+  apiKey: "AIzaSyABOVyC5Uz3Q_85609kvfwdYgdZcSFHBwE",
+  authDomain: "tes-hackaton.firebaseapp.com",
+  databaseURL: "https://tes-hackaton-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "tes-hackaton",
+  storageBucket: "tes-hackaton.firebasestorage.app",
+  messagingSenderId: "382466846609",
+  appId: "1:382466846609:web:c13ac92dac7250bb243430"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+// INIT MAP
+const map = L.map('map').setView([-6.2,106.8],5);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+const markers = {};
+
+// REALTIME LISTENER
+onValue(ref(db,'users'), snap => {
+  const users = snap.val();
+  if (!users) return;
+
+  let count = 0;
+
+  for (let id in users) {
+    if (!users[id].history) continue;
+
+    const history = Object.values(users[id].history);
+    if (!history.length) continue;
+
+    // ✅ FIX: SORT BERDASARKAN TIMESTAMP
+    const last = history.sort((a,b)=> (b.timestamp||b.time) - (a.timestamp||a.time))[0];
+
+    if (!last.lat || !last.lon) continue;
+
+    const latLng = [last.lat, last.lon];
+
+    if (!markers[id]) {
+      markers[id] = L.marker(latLng).addTo(map);
+    } else {
+      markers[id].setLatLng(latLng);
+    }
+
+    // update UI terakhir
+    document.getElementById("dLat").innerText = last.lat.toFixed(5);
+    document.getElementById("dLon").innerText = last.lon.toFixed(5);
+
+    // auto focus ke user terakhir
+    map.setView(latLng, 13);
+
+    count++;
+  }
+
+  document.getElementById("totalUser").innerText = count;
+});
+</script></body>
+</html>  </div>
 </div>
 
 <div class="footer">
