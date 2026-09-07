@@ -455,6 +455,10 @@
                 map.setView([target.lat, target.lon], 16);
                 Array.from(el.children).forEach(c => c.classList.remove('active'));
                 div.classList.add('active');
+
+                // MENGISI TELEMETRY DATA SAAT DI KLIK SECARA INSTAN
+                document.getElementById('dLat').innerText = target.lat.toFixed(5);
+                document.getElementById('dLon').innerText = target.lon.toFixed(5);
             }
             el.appendChild(div);
         });
@@ -555,6 +559,11 @@
         // Kembalikan ke layar login
         document.getElementById('loginScreen').classList.remove('hidden');
         map.setView([-0.789, 113.921], 5);
+
+        // RESTART ANIMASI WEBGL
+        if (typeof window.restartSmokey === 'function') {
+            window.restartSmokey();
+        }
     });
   </script>
 
@@ -593,6 +602,7 @@
     `;
 
     let smokeyAnimationId;
+    let isRenderingSmokey = true;
 
     function initSmokeyBackground() {
       const canvas = document.getElementById('smokeyCanvas');
@@ -649,9 +659,10 @@
 
       function render() {
         if(loginScreen.classList.contains('hidden')) {
-            cancelAnimationFrame(smokeyAnimationId);
-            return;
+            isRenderingSmokey = false;
+            return; // Hentikan render agar RAM/CPU hemat
         }
+        isRenderingSmokey = true;
 
         const width = canvas.clientWidth;
         const height = canvas.clientHeight;
@@ -667,6 +678,14 @@
         gl.drawArrays(gl.TRIANGLES, 0, 6);
         smokeyAnimationId = requestAnimationFrame(render);
       }
+
+      // GLOBAL FUNCTION UNTUK MEMBANGUNKAN ANIMASI SAAT LOGOUT
+      window.restartSmokey = function() {
+          if (!isRenderingSmokey) {
+              render();
+          }
+      };
+
       render();
     }
 
