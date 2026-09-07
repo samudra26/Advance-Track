@@ -252,38 +252,42 @@
         USERS_DB[id] = { pass: "1234", role: role, name: name, lat: lat, lon: lon, radius: radius };
     }
 
-    // 33 Kanwil Seluruh Indonesia (Radius 250km)
+    // 33 Kanwil Seluruh Indonesia (Radius dinamis disesuaikan luas provinsinya agar tidak bocor)
     const listKanwil = [
-        ["kanwil_aceh", "Kanwil Aceh", 4.695, 96.749], ["kanwil_sumut", "Kanwil Sumatera Utara", 2.115, 99.545],
-        ["kanwil_sumbar", "Kanwil Sumatera Barat", -0.739, 100.800], ["kanwil_riau", "Kanwil Riau", 0.293, 101.706],
-        ["kanwil_kepri", "Kanwil Kepulauan Riau", 3.945, 108.142], ["kanwil_jambi", "Kanwil Jambi", -1.611, 103.984],
-        ["kanwil_sumsel", "Kanwil Sumatera Selatan", -3.319, 104.914], ["kanwil_babel", "Kanwil Bangka Belitung", -2.741, 106.440],
-        ["kanwil_bengkulu", "Kanwil Bengkulu", -3.792, 102.260], ["kanwil_lampung", "Kanwil Lampung", -4.558, 105.188],
-        ["kanwil_dki", "Kanwil DKI Jakarta", -6.208, 106.845], ["kanwil_banten", "Kanwil Banten", -6.405, 106.064],
-        ["kanwil_jabar", "Kanwil Jawa Barat", -6.914, 107.609], ["kanwil_jateng", "Kanwil Jawa Tengah", -7.150, 110.140],
-        ["kanwil_diy", "Kanwil DI Yogyakarta", -7.795, 110.369], ["kanwil_jatim", "Kanwil Jawa Timur", -7.250, 112.750],
-        ["kanwil_bali", "Kanwil Bali", -8.409, 115.188], ["kanwil_ntb", "Kanwil Nusa Tenggara Barat", -8.650, 117.361],
-        ["kanwil_ntt", "Kanwil Nusa Tenggara Timur", -8.622, 121.079], ["kanwil_kalbar", "Kanwil Kalimantan Barat", -0.278, 111.475],
-        ["kanwil_kalteng", "Kanwil Kalimantan Tengah", -1.681, 113.382], ["kanwil_kalsel", "Kanwil Kalimantan Selatan", -3.092, 115.283],
-        ["kanwil_kaltim", "Kanwil Kalimantan Timur", 0.538, 116.419], ["kanwil_kaltara", "Kanwil Kalimantan Utara", 3.073, 116.041],
-        ["kanwil_sulut", "Kanwil Sulawesi Utara", 1.474, 124.842], ["kanwil_gorontalo", "Kanwil Gorontalo", 0.543, 122.298],
-        ["kanwil_sulteng", "Kanwil Sulawesi Tengah", -1.430, 121.445], ["kanwil_sulbar", "Kanwil Sulawesi Barat", -2.844, 119.232],
-        ["kanwil_sulsel", "Kanwil Sulawesi Selatan", -4.144, 120.119], ["kanwil_sultra", "Kanwil Sulawesi Tenggara", -4.144, 122.174],
-        ["kanwil_maluku", "Kanwil Maluku", -3.238, 130.145], ["kanwil_malut", "Kanwil Maluku Utara", 1.570, 127.808],
-        ["kanwil_papua", "Kanwil Papua", -2.588, 140.671], ["kanwil_papuabarat", "Kanwil Papua Barat", -0.861, 134.062]
+        ["kanwil_aceh", "Kanwil Aceh", 4.695, 96.749, 250], ["kanwil_sumut", "Kanwil Sumatera Utara", 2.115, 99.545, 200],
+        ["kanwil_sumbar", "Kanwil Sumatera Barat", -0.739, 100.800, 150], ["kanwil_riau", "Kanwil Riau", 0.293, 101.706, 180],
+        ["kanwil_kepri", "Kanwil Kepulauan Riau", 3.945, 108.142, 200], ["kanwil_jambi", "Kanwil Jambi", -1.611, 103.984, 150],
+        ["kanwil_sumsel", "Kanwil Sumatera Selatan", -3.319, 104.914, 150], ["kanwil_babel", "Kanwil Bangka Belitung", -2.741, 106.440, 150],
+        ["kanwil_bengkulu", "Kanwil Bengkulu", -3.792, 102.260, 120], ["kanwil_lampung", "Kanwil Lampung", -4.558, 105.188, 120],
+        ["kanwil_dki", "Kanwil DKI Jakarta", -6.208, 106.845, 25], /* Radius Sangat Kecil Khusus DKI */
+        ["kanwil_banten", "Kanwil Banten", -6.405, 106.064, 85], /* Radius diperbesar 85km agar Tangerang masuk radar tapi Jakarta tidak */
+        ["kanwil_jabar", "Kanwil Jawa Barat", -6.914, 107.609, 120], ["kanwil_jateng", "Kanwil Jawa Tengah", -7.150, 110.140, 120],
+        ["kanwil_diy", "Kanwil DI Yogyakarta", -7.795, 110.369, 40], /* DIY Kecil */
+        ["kanwil_jatim", "Kanwil Jawa Timur", -7.250, 112.750, 150], ["kanwil_bali", "Kanwil Bali", -8.409, 115.188, 60],
+        ["kanwil_ntb", "Kanwil Nusa Tenggara Barat", -8.650, 117.361, 150], ["kanwil_ntt", "Kanwil Nusa Tenggara Timur", -8.622, 121.079, 200], 
+        ["kanwil_kalbar", "Kanwil Kalimantan Barat", -0.278, 111.475, 250], ["kanwil_kalteng", "Kanwil Kalimantan Tengah", -1.681, 113.382, 250], 
+        ["kanwil_kalsel", "Kanwil Kalimantan Selatan", -3.092, 115.283, 150], ["kanwil_kaltim", "Kanwil Kalimantan Timur", 0.538, 116.419, 250], 
+        ["kanwil_kaltara", "Kanwil Kalimantan Utara", 3.073, 116.041, 150], ["kanwil_sulut", "Kanwil Sulawesi Utara", 1.474, 124.842, 150], 
+        ["kanwil_gorontalo", "Kanwil Gorontalo", 0.543, 122.298, 100], ["kanwil_sulteng", "Kanwil Sulawesi Tengah", -1.430, 121.445, 250], 
+        ["kanwil_sulbar", "Kanwil Sulawesi Barat", -2.844, 119.232, 100], ["kanwil_sulsel", "Kanwil Sulawesi Selatan", -4.144, 120.119, 200], 
+        ["kanwil_sultra", "Kanwil Sulawesi Tenggara", -4.144, 122.174, 150], ["kanwil_maluku", "Kanwil Maluku", -3.238, 130.145, 250], 
+        ["kanwil_malut", "Kanwil Maluku Utara", 1.570, 127.808, 150], ["kanwil_papua", "Kanwil Papua", -2.588, 140.671, 300], /* Sangat Besar */
+        ["kanwil_papuabarat", "Kanwil Papua Barat", -0.861, 134.062, 200]
     ];
-    listKanwil.forEach(k => addRegion(k[0], k[1], "KANWIL", k[2], k[3], 250));
+    // Modifikasi loop agar membaca radius (index ke-4) dari setiap Kanwil
+    listKanwil.forEach(k => addRegion(k[0], k[1], "KANWIL", k[2], k[3], k[4]));
 
     // --- KAMUS PINTAR KANIM (SMART KANIM MAPPER) ---
     // Mapping otomatis untuk Kanim besar. Radius disesuaikan ketat agar tidak tumpang tindih (Overlap).
-    // Jakarta sangat padat, jadi radiusnya diperkecil (5-7km) agar Jaksel tidak bocor ke Jaktim/Jakbar.
     const kanimMapper = {
-        "jaksel": { lat: -6.2650, lon: 106.8100, radius: 6 }, // Digeser ke tengah Jaksel, radius 6km
-        "jakpus": { lat: -6.1754, lon: 106.8272, radius: 5 }, // Monas area
-        "jakbar": { lat: -6.1600, lon: 106.7400, radius: 6 }, // Puri/Kebon Jeruk area
-        "jaktim": { lat: -6.2250, lon: 106.8900, radius: 7 }, // Cipinang/Jatinegara area
-        "jakut": { lat: -6.1200, lon: 106.8900, radius: 6 }, // Kelapa Gading/Priok
+        "jaksel": { lat: -6.2650, lon: 106.8100, radius: 7 },
+        "jakpus": { lat: -6.1754, lon: 106.8272, radius: 5 }, 
+        "jakbar": { lat: -6.1600, lon: 106.7400, radius: 6 }, 
+        "jaktim": { lat: -6.2250, lon: 106.8900, radius: 7 }, 
+        "jakut": { lat: -6.1200, lon: 106.8900, radius: 6 }, 
         "soetta": { lat: -6.1255, lon: 106.6558, radius: 5 },
+        "tangerang": { lat: -6.1783, lon: 106.6318, radius: 15 }, // Tambah Tangerang Kota
+        "tanggerang": { lat: -6.1783, lon: 106.6318, radius: 15 }, // Antisipasi Typo pengguna
         "ngurahrai": { lat: -8.7844, lon: 115.1705, radius: 10 },
         "singkawang": { lat: 0.9015, lon: 108.9792, radius: 15 },
         "manado": { lat: 1.4748, lon: 124.8420, radius: 15 },
