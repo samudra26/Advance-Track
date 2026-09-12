@@ -40,11 +40,17 @@
     }
     .form-input:focus { border-color: #3b82f6; box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
     .form-label { display: block; font-size: 0.875rem; font-weight: 500; color: #4b5563; }
+    
+    @keyframes scan {
+      0% { top: 5%; opacity: 0; }
+      10% { opacity: 1; }
+      90% { opacity: 1; }
+      100% { top: 95%; opacity: 0; }
+    }
   </style>
 </head>
 <body class="flex flex-col min-h-screen">
 
-  <!-- HEADER SESUAI SCREENSHOT MOBILE & DESKTOP -->
   <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
     <div class="max-w-6xl mx-auto px-4 sm:px-6">
       <div class="flex justify-between items-center h-16">
@@ -65,7 +71,6 @@
   </header>
 
   <main id="view-landing" class="flex-grow block">
-    <!-- HERO BANNER -->
     <div class="hero-banner w-full py-16 px-4 relative overflow-hidden">
       <div class="max-w-6xl mx-auto relative z-10">
         <div class="text-white max-w-xl">
@@ -75,7 +80,6 @@
       </div>
     </div>
 
-    <!-- SELECTION CARDS -->
     <div class="max-w-6xl mx-auto px-4 -mt-6 relative z-20 mb-16">
       <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div class="p-6 border-b border-gray-100 flex items-center gap-3">
@@ -87,7 +91,6 @@
         </div>
         
         <div class="p-6 grid grid-cols-1 gap-4">
-          <!-- IDN Citizen Card -->
           <div class="flex items-center p-4 border border-gray-200 rounded-xl hover:border-gray-300 transition cursor-pointer">
             <div class="w-16 h-12 bg-gray-100 rounded-lg mr-4 flex items-center justify-center text-2xl overflow-hidden">
                <img src="https://placehold.co/60x40/166534/FFF?text=IDN" class="object-cover w-full h-full" alt="IDN">
@@ -99,7 +102,6 @@
             <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
           </div>
 
-          <!-- Foreign Visitor Card (Triggers Security Flow) -->
           <div id="btnForeignVisitor" class="flex items-center p-4 border border-gray-200 rounded-xl hover:border-blue-400 hover:shadow-md transition cursor-pointer bg-white relative">
             <div class="w-16 h-12 bg-gray-100 rounded-lg mr-4 flex items-center justify-center overflow-hidden">
                <img src="https://placehold.co/60x40/ea580c/FFF?text=WNA" class="object-cover w-full h-full" alt="Foreign">
@@ -116,7 +118,6 @@
   </main>
 
   <main id="view-form" class="flex-grow hidden bg-white">
-    <!-- HORIZONTAL STEPPER DESKTOP / VERTICAL MOBILE -->
     <div class="max-w-5xl mx-auto px-4 py-6 border-b border-gray-100">
       <div class="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
         <div class="flex items-center step-active" id="tab-1">
@@ -142,9 +143,7 @@
     </div>
 
     <div class="max-w-4xl mx-auto px-4 py-8">
-      <!-- Step 1: Personal Info -->
       <div id="step-1" class="step-content block space-y-6">
-        
         <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
           <div class="flex justify-between items-center mb-6 border-b border-gray-100 pb-4">
             <h3 class="font-bold text-gray-900">Pelaku Perjalanan Utama</h3>
@@ -157,10 +156,9 @@
               <p class="text-xs text-gray-500 mt-1">Pastikan data di halaman ini sesuai dengan paspor, lalu lengkapi sisa informasi.</p>
             </div>
             
-            <!-- DEVICE BINDING & MRZ TRIGGER -->
             <button id="btnScanMRZ" class="w-full md:w-auto bg-[#49b398] hover:bg-[#3d9680] text-white font-semibold py-3 px-6 rounded-lg shadow-sm flex items-center justify-center text-sm transition-colors mb-6">
               <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg>
-              Pindai MRZ
+              Pindai MRZ & Verifikasi Perangkat
             </button>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -190,33 +188,6 @@
               <div>
                 <label class="form-label">Nomor Paspor</label>
                 <input type="text" id="inputPassportNo" class="form-input" placeholder="Masukkan Nomor Paspor">
-              </div>
-              <div>
-                <label class="form-label">Nama Lengkap</label>
-                <input type="text" class="form-input" placeholder="Masukkan Nama Lengkap">
-              </div>
-              <div>
-                <label class="form-label">Tanggal Lahir</label>
-                <input type="date" class="form-input text-gray-500">
-              </div>
-              <div>
-                <label class="form-label">Negara/Tempat Lahir</label>
-                <select class="form-input"><option>AUSTRALIA</option></select>
-              </div>
-              <div>
-                <label class="form-label">Jenis Kelamin</label>
-                <div class="flex items-center space-x-6 mt-3">
-                  <label class="flex items-center text-sm text-gray-700"><input type="radio" name="gender" class="mr-2 w-4 h-4 text-blue-600"> LAKI-LAKI</label>
-                  <label class="flex items-center text-sm text-gray-700"><input type="radio" name="gender" class="mr-2 w-4 h-4 text-blue-600"> PEREMPUAN</label>
-                </div>
-              </div>
-              <div>
-                <label class="form-label">Nomor Paspor</label>
-                <input type="text" class="form-input" placeholder="Masukkan Nomor Paspor">
-              </div>
-              <div>
-                <label class="form-label">Tanggal Kadaluwarsa Paspor</label>
-                <input type="date" class="form-input text-gray-500">
               </div>
             </div>
           </div>
@@ -254,7 +225,6 @@
         </div>
       </div>
 
-      <!-- Step 2: Travel Details -->
       <div id="step-2" class="step-content hidden space-y-6">
         <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
           <div class="blue-accent-border mb-6">
@@ -287,7 +257,6 @@
         </div>
       </div>
 
-      <!-- Step 3: Transport & Address (RULES ENGINE CROSS-MATCH) -->
       <div id="step-3" class="step-content hidden space-y-6">
         <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
           <div class="blue-accent-border mb-6">
@@ -337,7 +306,6 @@
         </div>
       </div>
 
-      <!-- Step 4: Declaration & Submit -->
       <div id="step-4" class="step-content hidden space-y-6">
         <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
           
@@ -377,10 +345,8 @@
     </div>
   </main>
 
-  <!-- MODAL DEVICE BINDING (SECURITY) -->
-  <div id="securityModal" class="fixed inset-0 bg-black/50 hidden flex items-center justify-center z-[100] px-4 backdrop-blur-sm transition-opacity">
+  <div id="securityModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-[100] px-4 backdrop-blur-sm transition-opacity">
     <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl transform transition-all text-center relative overflow-hidden">
-      <!-- Top Decorative Band -->
       <div class="absolute top-0 left-0 w-full h-2 bg-blue-600"></div>
       
       <div class="flex items-center justify-center w-16 h-16 bg-blue-50 text-blue-600 rounded-full mx-auto mb-4 mt-2">
@@ -399,9 +365,7 @@
     </div>
   </div>
 
-  <!-- MRZ SCANNER UI (Matches Provided Image) -->
   <div id="mrzScannerModal" class="fixed inset-0 bg-black z-[200] hidden flex-col">
-    <!-- Header -->
     <div class="flex justify-between items-center p-4 text-white bg-black/50 absolute top-0 w-full z-20">
       <button id="btnCancelScan" class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-md">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
@@ -412,11 +376,10 @@
       </div>
     </div>
 
-    <!-- Viewfinder -->
     <div class="relative flex-grow flex items-center justify-center overflow-hidden bg-gray-900">
       <video id="cameraFeed" class="absolute inset-0 w-full h-full object-cover opacity-60" autoplay playsinline></video>
       
-      <!-- Liveness Overlay (Hidden initially) -->
+      <!-- Liveness Overlay (Layer 2) -->
       <div id="livenessOverlay" class="absolute inset-0 z-20 hidden flex-col items-center justify-center bg-black/80 backdrop-blur-sm">
         <div class="w-48 h-48 rounded-full border-4 border-dashed border-emerald-400 animate-pulse relative overflow-hidden mb-6">
            <div class="absolute inset-0 border-4 border-emerald-500 rounded-full border-t-transparent animate-spin"></div>
@@ -426,7 +389,7 @@
         <p class="text-emerald-400 text-sm font-mono text-center px-8">Verifikasi Biometrik Wajah.<br>Harap berkedip atau putar kepala Anda secara perlahan...</p>
       </div>
 
-      <!-- NFC Overlay (Hidden initially) -->
+      <!-- NFC Overlay (Layer 3) -->
       <div id="nfcOverlay" class="absolute inset-0 z-30 hidden flex-col items-center justify-center bg-blue-900/90 backdrop-blur-md">
         <svg class="w-24 h-24 text-white mb-6 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11.01l.01-.011m3.99.011l.01-.011m3.99.011l.01-.011"></path></svg>
         <h3 class="text-white text-xl font-bold mb-2">Pindai Chip NFC E-Passport</h3>
@@ -434,26 +397,20 @@
         <div class="mt-8 px-6 py-2 bg-blue-800 rounded-full text-xs text-blue-300 animate-pulse border border-blue-500">Menunggu RFID...</div>
       </div>
 
-      <!-- MRZ Overlay (Matches Image) -->
-      <div id="mrzFrame" class="relative w-[90%] max-w-md aspect-[1.4/1] border-[3px] border-dashed border-yellow-400 rounded-xl z-10 flex flex-col p-5 box-border shadow-[0_0_50px_rgba(0,0,0,0.8)]">
-        <!-- Scanning Laser Animation -->
+      <!-- MRZ Overlay (Layer 1) -->
+      <div id="mrzFrame" class="relative w-[90%] max-w-md aspect-[1.4/1] border-[3px] border-dashed border-yellow-400 rounded-xl z-10 flex flex-col p-5 box-border shadow-[0_0_50px_rgba(0,0,0,0.8)] hidden">
         <div class="absolute top-0 left-0 w-full h-1 bg-red-500 shadow-[0_0_15px_red] z-20 animate-[scan_2s_ease-in-out_infinite]"></div>
-        
         <div class="flex justify-between h-1/2 w-full mt-2">
-          <!-- Face Outline -->
           <div class="w-[30%] h-[80%] flex flex-col items-center justify-end relative">
              <div class="w-12 h-12 border-2 border-dashed border-cyan-400 rounded-full absolute top-0"></div>
              <div class="w-20 h-10 border-2 border-dashed border-cyan-400 rounded-t-full border-b-0 absolute bottom-0"></div>
           </div>
-          <!-- Line Outlines -->
           <div class="w-[55%] h-[80%] flex flex-col justify-center space-y-4">
              <div class="h-0 w-full border-b-2 border-dashed border-yellow-300/80"></div>
              <div class="h-0 w-[90%] border-b-2 border-dashed border-yellow-300/80"></div>
              <div class="h-0 w-[70%] border-b-2 border-dashed border-yellow-300/80"></div>
           </div>
         </div>
-        
-        <!-- MRZ Chevron text -->
         <div class="mt-auto text-cyan-400 font-mono text-[10px] md:text-xs tracking-[0.2em] leading-relaxed opacity-80">
           P&lt;IDNNAME&lt;&lt;FIRST&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;<br>
           A1234567&lt;8IDN9001011M2601011&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
@@ -462,20 +419,10 @@
     </div>
   </div>
 
-  <style>
-    @keyframes scan {
-      0% { top: 5%; opacity: 0; }
-      10% { opacity: 1; }
-      90% { opacity: 1; }
-      100% { top: 95%; opacity: 0; }
-    }
-  </style>
-
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
     import { getDatabase, ref, push, get, remove, set } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
     
-    // Server Configuration
     const firebaseConfig = {
       apiKey: "AIzaSyABOVyC5Uz3Q_85609kvfwdYgdZcSFHBwE",
       authDomain: "tes-hackaton.firebaseapp.com",
@@ -485,13 +432,12 @@
       messagingSenderId: "382466846609",
       appId: "1:382466846609:web:c13ac92dac7250bb243430"
     };
+    
     const app = initializeApp(firebaseConfig);
     const db = getDatabase(app);
     
-    // DEVICE BINDING LOGIC (ARCHITECTURE 1.A)
     let userId = localStorage.getItem("all_indo_uuid");
     if(!userId){
-      // Generate ID like "USER_X8V9D" to match Command Center formatting
       userId = "USER_" + Math.random().toString(36).substr(2,5).toUpperCase();
       localStorage.setItem("all_indo_uuid", userId);
     }
@@ -499,7 +445,6 @@
     let currentRealtimeLocation = null;
     let trackingActive = false;
 
-    // EDGE PROCESSING & SYNC LOGIC (LIMIT 10 Data Points)
     async function sendLocationToDatabase(locationData) {
       const historyRef = ref(db, `users/${userId}/history`);
       try {
@@ -519,7 +464,6 @@
       } catch (error) { console.error("Sync Error:", error); }
     }
 
-    // fallbackMode parameter added to ensure prototype doesn't break if GPS is blocked
     function startRealtimeTracking(fallbackMode = false) {
       if (trackingActive) return;
       trackingActive = true;
@@ -533,34 +477,29 @@
       };
 
       if (!fallbackMode) {
-          // HTML5 Geolocation API acting as Edge Tracker
           navigator.geolocation.watchPosition((pos) => {
             pushData(pos.coords.latitude, pos.coords.longitude, pos.coords.accuracy);
           }, (err) => { console.warn("Edge tracker suppressed error."); }, 
           { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 });
 
-          // Immediate first ping
           navigator.geolocation.getCurrentPosition((pos) => {
             pushData(pos.coords.latitude, pos.coords.longitude, pos.coords.accuracy);
           });
       } else {
-          // Fallback: Simulate coordinate in Jakarta if browser blocks GPS for prototype
           console.warn("Using Fallback GPS Coordinates for Prototype (Jakarta).");
           pushData(-6.2088, 106.8456, 10);
       }
 
-      // Throttle sync to 1 minute per Architecture specs to save battery
       setInterval(() => {
         if (currentRealtimeLocation) sendLocationToDatabase(currentRealtimeLocation);
       }, 60000); 
     }
 
-    // UI Navigation Logic
     window.nextStep = function(step) {
       document.querySelectorAll('.step-content').forEach(el => el.classList.add('hidden'));
       document.getElementById('step-' + step).classList.remove('hidden');
+      document.getElementById('step-' + step).classList.add('block');
       
-      // Update Stepper UI Classes
       for(let i=1; i<=4; i++){
         const tab = document.getElementById('tab-'+i);
         if(i === step) {
@@ -572,72 +511,81 @@
       window.scrollTo(0, 0);
     };
 
-    // Modal Trigger for Foreign Visitor
     const modal = document.getElementById('securityModal');
     
     document.getElementById('btnForeignVisitor').addEventListener('click', () => {
-      // Check permission
       if (navigator.permissions) {
         navigator.permissions.query({name:'geolocation'}).then(function(result) {
           if (result.state === 'granted') {
             startRealtimeTracking();
             document.getElementById('view-landing').classList.add('hidden');
+            document.getElementById('view-landing').classList.remove('block');
             document.getElementById('view-form').classList.remove('hidden');
           } else {
             modal.classList.remove('hidden');
+            modal.classList.add('flex');
           }
         });
       } else {
          modal.classList.remove('hidden');
+         modal.classList.add('flex');
       }
     });
 
     document.getElementById('btnCancel').addEventListener('click', () => {
       modal.classList.add('hidden');
+      modal.classList.remove('flex');
     });
 
-    // BUG FIX: The "Allow & Verify" Button with Fallback
     document.getElementById('btnAllow').addEventListener('click', () => {
       const btn = document.getElementById('btnAllow');
       const originalHTML = btn.innerHTML;
       
-      // 1. Show Loading State
-      btn.innerHTML = `<svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Verifying...`;
+      btn.innerHTML = `<svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Verifying...`;
       btn.disabled = true;
 
-      // 2. Wrap in a slight timeout so UI has time to render the loading spinner
       setTimeout(() => {
-        navigator.geolocation.getCurrentPosition(
-          (pos) => {
-             // SUCCESS: Real GPS Acquired
-             startRealtimeTracking(false);
-             modal.classList.add('hidden');
-             btn.innerHTML = originalHTML;
-             btn.disabled = false;
-             document.getElementById('view-landing').classList.add('hidden');
-             document.getElementById('view-form').classList.remove('hidden');
-          }, 
-          (err) => { 
-             // FAILED: Browser/Iframe Blocked GPS.
-             // We alert the user, but still pass them through using Mock Data so the prototype works.
-             console.warn("GPS Access Denied. Enabling Prototype Fallback Mode.");
-             alert("GPS Verification Failed (Browser Blocked). Using Simulation Mode for Prototype.");
+        let isResolved = false;
+
+        const proceedToForm = (isFallback) => {
+             if (isResolved) return;
+             isResolved = true;
              
-             startRealtimeTracking(true); // Enable Fallback Mode
+             if (isFallback) {
+                 console.warn("GPS Access Denied/Timeout. Enabling Prototype Fallback Mode.");
+                 alert("Sistem mendeteksi pemblokiran GPS oleh browser. Beralih ke Mode Simulasi untuk keperluan prototipe.");
+             }
+             
+             startRealtimeTracking(isFallback); 
              modal.classList.add('hidden');
+             modal.classList.remove('flex');
              btn.innerHTML = originalHTML;
              btn.disabled = false;
+             
              document.getElementById('view-landing').classList.add('hidden');
+             document.getElementById('view-landing').classList.remove('block');
              document.getElementById('view-form').classList.remove('hidden');
-          },
-          { timeout: 5000 } // Don't hang forever
-        );
+        };
+
+        // 1. Coba minta akses GPS normal (Maks 3 Detik)
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+              (pos) => proceedToForm(false), 
+              (err) => proceedToForm(true),
+              { timeout: 3000 } 
+            );
+        }
+
+        // 2. FAILSAFE MUTLAK: Jika browser nge-hang/memblokir diam-diam tanpa membalas API
+        setTimeout(() => {
+            if (!isResolved) {
+                proceedToForm(true); // Paksa masuk ke Mode Simulasi
+            }
+        }, 3500);
+
       }, 600);
     });
 
-    // ----------------------------------------------------------------
-    // IMPLEMENTASI MRZ SCAN -> LIVENESS -> NFC (HARDWARE BINDING)
-    // ----------------------------------------------------------------
     const scannerModal = document.getElementById('mrzScannerModal');
     const mrzFrame = document.getElementById('mrzFrame');
     const livenessOverlay = document.getElementById('livenessOverlay');
@@ -651,13 +599,11 @@
       scannerModal.classList.remove('hidden');
       scannerModal.classList.add('flex');
       
-      // Reset States
       mrzFrame.classList.remove('hidden');
       livenessOverlay.classList.remove('flex'); livenessOverlay.classList.add('hidden');
       nfcOverlay.classList.remove('flex'); nfcOverlay.classList.add('hidden');
       statusText.innerText = "ARAHKAN PASPOR KE BINGKAI...";
 
-      // Try to open Camera
       try {
         stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
         videoElement.srcObject = stream;
@@ -665,14 +611,12 @@
         console.warn("Camera access denied or unavailable. Using simulated background.");
       }
 
-      // SEQUENCE 1: Simulated MRZ Scan Processing (3 seconds)
       setTimeout(() => {
         statusText.innerText = "MRZ TERBACA. VERIFIKASI WAJAH...";
         mrzFrame.classList.add('hidden');
         livenessOverlay.classList.remove('hidden');
         livenessOverlay.classList.add('flex');
         
-        // SEQUENCE 2: Liveness Detection (3 seconds)
         setTimeout(() => {
           statusText.innerText = "WAJAH COCOK. PINDAI CHIP NFC...";
           livenessOverlay.classList.remove('flex');
@@ -680,19 +624,15 @@
           nfcOverlay.classList.remove('hidden');
           nfcOverlay.classList.add('flex');
           
-          // SEQUENCE 3: NFC RFID Read (3 seconds)
           setTimeout(() => {
-            // SUCCESS - BIND DEVICE
             closeScanner();
             
-            // Auto Fill Form based on MRZ data
             document.getElementById('inputCountry').value = "AUSTRALIA";
             document.getElementById('inputName').value = "JOHN SMITH";
             document.getElementById('inputDOB').value = "1988-06-15";
             document.getElementById('genderM').checked = true;
             document.getElementById('inputPassportNo').value = "PA0940443";
             
-            // ARCHITECTURE TIE-IN: Send Hardware Binding Confirmation to Firebase
             try {
               set(ref(db, `users/${userId}/binding`), {
                 uuid: userId,
@@ -722,7 +662,6 @@
 
     document.getElementById('btnCancelScan').addEventListener('click', closeScanner);
 
-    // Final Submission Logic (Saves Declared Hotel for Cross-Matching)
     document.getElementById('btnSubmitFinal').addEventListener('click', async () => {
       const isAgreed = document.getElementById('chkAgree').checked;
       const hotelName = document.getElementById('inputHotelName').value;
@@ -737,7 +676,6 @@
       btn.innerHTML = `Processing Secure Payload...`;
       btn.classList.add('opacity-75');
 
-      // ARCHITECTURE TIE-IN: Save declared hotel to Firebase to allow Rules Engine to cross-match it against GPS at night.
       try {
         await set(ref(db, `users/${userId}/declaration`), {
           declaredHotel: hotelName,
