@@ -148,7 +148,7 @@
                     <span id="dBind" class="text-xs font-tech text-emerald-400">STANDBY</span>
                 </div>
                 <div class="flex justify-between items-center mb-2">
-                    <span class="text-xs text-slate-400">ACCOM. MATCH</span>
+                    <span class="text-xs text-slate-400">ACCUM. MATCH</span>
                     <span id="dAccom" class="text-xs font-tech text-emerald-400">STANDBY</span>
                 </div>
                 <div class="flex justify-between items-center mb-3">
@@ -302,6 +302,7 @@
         let map = L.map('map', { zoomControl: false }).setView([-0.789, 113.921], 5);
         L.control.zoom({ position: 'bottomleft' }).addTo(map);
 
+        // KEMBALI MENGGUNAKAN LEAFLET DENGAN OPENSTREETMAP BAWAAN MURNI
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap contributors',
             maxZoom: 19
@@ -419,10 +420,13 @@
                     document.getElementById('loginScreen').classList.add('hidden');
                     document.getElementById('appScreen').classList.remove('hidden');
                     
-                    // MEMPERBAIKI BUG PETA POJOK KIRI ATAS (Leaflet rendering bug)
+                    // KRUSIAL: Memperbaiki bug ukuran peta pojok kiri atas (Leaflet rendering container fix)
                     setTimeout(() => {
-                        map.invalidateSize();
-                    }, 200);
+                        map.invalidateSize(true);
+                    }, 100);
+                    setTimeout(() => {
+                        map.invalidateSize(true);
+                    }, 400);
 
                     document.getElementById('activeOp').innerText = `OPR: ${currentUserData.name} (VERIFIED)`;
                     
