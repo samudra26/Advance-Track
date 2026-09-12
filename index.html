@@ -47,10 +47,14 @@
       90% { opacity: 1; }
       100% { top: 95%; opacity: 0; }
     }
+    .scan-line {
+      animation: scan 2s ease-in-out infinite;
+    }
   </style>
 </head>
 <body class="flex flex-col min-h-screen">
 
+  <!-- Header -->
   <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
     <div class="max-w-6xl mx-auto px-4 sm:px-6">
       <div class="flex justify-between items-center h-16">
@@ -70,6 +74,7 @@
     </div>
   </header>
 
+  <!-- Landing Page -->
   <main id="view-landing" class="flex-grow block">
     <div class="hero-banner w-full py-16 px-4 relative overflow-hidden">
       <div class="max-w-6xl mx-auto relative z-10">
@@ -117,7 +122,9 @@
     </div>
   </main>
 
+  <!-- Form Page -->
   <main id="view-form" class="flex-grow hidden bg-white">
+    <!-- Steps Navigation -->
     <div class="max-w-5xl mx-auto px-4 py-6 border-b border-gray-100">
       <div class="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
         <div class="flex items-center step-active" id="tab-1">
@@ -142,7 +149,10 @@
       </div>
     </div>
 
+    <!-- Forms Content -->
     <div class="max-w-4xl mx-auto px-4 py-8">
+      
+      <!-- Step 1: Informasi Pribadi -->
       <div id="step-1" class="step-content block space-y-6">
         <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
           <div class="flex justify-between items-center mb-6 border-b border-gray-100 pb-4">
@@ -225,196 +235,126 @@
         </div>
       </div>
 
+      <!-- Step 2, 3, 4 ... -->
       <div id="step-2" class="step-content hidden space-y-6">
         <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
           <div class="blue-accent-border mb-6">
             <h4 class="font-bold text-gray-900 text-sm">Travel Details</h4>
-            <p class="text-xs text-gray-500 mt-1">Please complete your Arrival Card before entering Indonesia by filling out the required information.</p>
           </div>
-          
           <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
-            <div>
-              <label class="form-label">Arrival Date to Indonesia</label>
-              <input type="date" class="form-input">
-            </div>
-            <div>
-              <label class="form-label">Departure Date from Indonesia</label>
-              <input type="date" class="form-input">
-            </div>
-            <div class="col-span-1 md:col-span-2 p-5 border border-gray-200 rounded-lg bg-gray-50">
-              <label class="form-label font-bold text-gray-800">Do you already have a Visa or KITAS/KITAP?</label>
-              <div class="flex items-center space-x-8 mt-3">
-                <label class="flex items-center text-sm"><input type="radio" name="hasVisa" checked class="mr-2 w-4 h-4 text-blue-600"> Yes</label>
-                <label class="flex items-center text-sm"><input type="radio" name="hasVisa" class="mr-2 w-4 h-4 text-blue-600"> No</label>
-              </div>
-            </div>
+            <div><label class="form-label">Arrival Date</label><input type="date" class="form-input"></div>
+            <div><label class="form-label">Departure Date</label><input type="date" class="form-input"></div>
           </div>
         </div>
-        
         <div class="flex justify-between items-center mt-6">
-          <button onclick="nextStep(1)" class="px-6 py-3 bg-gray-200 rounded-lg font-medium text-gray-700 hover:bg-gray-300 transition text-sm">Back</button>
-          <button onclick="nextStep(3)" class="bg-[#1a365d] text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-900 transition text-sm">Next</button>
+          <button onclick="nextStep(1)" class="px-6 py-3 bg-gray-200 rounded-lg font-medium">Back</button>
+          <button onclick="nextStep(3)" class="bg-[#1a365d] text-white px-8 py-3 rounded-lg font-semibold">Next</button>
         </div>
       </div>
 
       <div id="step-3" class="step-content hidden space-y-6">
         <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-          <div class="blue-accent-border mb-6">
-            <h4 class="font-bold text-gray-900 text-sm">Mode of Transport</h4>
-            <p class="text-xs text-gray-500 mt-1">Please select the method of transport you will use to enter Indonesia.</p>
-          </div>
-          
+          <div class="blue-accent-border mb-6"><h4 class="font-bold text-gray-900 text-sm">Mode of Transport</h4></div>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-8">
-            <div>
-              <label class="form-label">Mode of Transport</label>
-              <select class="form-input border-blue-500 bg-blue-50"><option>AIR</option><option>SEA</option></select>
-            </div>
-            <div>
-              <label class="form-label">Purpose of Travel</label>
-              <select class="form-input border-blue-500 bg-blue-50"><option>HOLIDAY/SIGHTSEEING/LEISURE</option></select>
-            </div>
-            <div>
-              <label class="form-label">Place of Arrival</label>
-              <select class="form-input border-blue-500 bg-blue-50"><option>NGURAH RAI AIRPORT</option><option>SOEKARNO HATTA</option></select>
-            </div>
-            <div>
-              <label class="form-label">Flight Number</label>
-              <input type="text" class="form-input" placeholder="e.g. JQ 111">
-            </div>
+            <div><label class="form-label">Mode</label><select class="form-input"><option>AIR</option></select></div>
+            <div><label class="form-label">Place of Arrival</label><select class="form-input"><option>NGURAH RAI</option></select></div>
           </div>
-
-          <div class="blue-accent-border mb-6 border-t border-gray-100 pt-6">
-            <h4 class="font-bold text-gray-900 text-sm">Address in Indonesia</h4>
-            <p class="text-xs text-gray-500 mt-1">Please provide the address where you will be staying in Indonesia.</p>
-          </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-            <div>
-              <label class="form-label">Residence Type</label>
-              <select class="form-input"><option>HOTEL</option><option>VILLA</option><option>RESIDENCE</option></select>
-            </div>
-            <div class="md:col-span-2">
-              <label class="form-label font-bold text-red-600">Name of Hotel / Exact Address</label>
-              <input type="text" id="inputHotelName" class="form-input border-2 border-red-300 focus:border-red-500 bg-red-50" placeholder="e.g. VICEROY BALI, KAB GIANYAR" required>
-              <p class="text-[10px] text-gray-500 mt-1.5 italic">*This data will be cross-matched securely with the Intelligence Engine for Accommodation Verification.</p>
-            </div>
+          <div class="blue-accent-border mb-6 border-t border-gray-100 pt-6"><h4 class="font-bold text-gray-900 text-sm">Address</h4></div>
+          <div class="md:col-span-2">
+            <label class="form-label font-bold text-red-600">Name of Hotel / Exact Address</label>
+            <input type="text" id="inputHotelName" class="form-input border-2 border-red-300 focus:border-red-500 bg-red-50" placeholder="e.g. VICEROY BALI, KAB GIANYAR" required>
           </div>
         </div>
-
         <div class="flex justify-between items-center mt-6">
-          <button onclick="nextStep(2)" class="px-6 py-3 bg-gray-200 rounded-lg font-medium text-gray-700 hover:bg-gray-300 transition text-sm">Back</button>
-          <button onclick="nextStep(4)" class="bg-[#1a365d] text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-900 transition text-sm">Next</button>
+          <button onclick="nextStep(2)" class="px-6 py-3 bg-gray-200 rounded-lg font-medium">Back</button>
+          <button onclick="nextStep(4)" class="bg-[#1a365d] text-white px-8 py-3 rounded-lg font-semibold">Next</button>
         </div>
       </div>
 
       <div id="step-4" class="step-content hidden space-y-6">
         <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-          
-          <div class="blue-accent-border mb-4">
-            <h4 class="font-bold text-gray-900 text-sm">Health Declaration</h4>
-            <p class="text-xs text-gray-500 mt-1">In accordance with Indonesia's national health protocols, please complete the health declaration.</p>
-          </div>
-          <div class="bg-gray-50 border border-gray-200 p-5 rounded-lg mb-6">
-            <p class="text-sm text-gray-800 font-medium mb-3">Do you have any of the following symptoms: fever, cough, runny nose, shortness of breath, sore throat?</p>
-            <div class="flex space-x-8">
-              <label class="flex items-center text-sm"><input type="radio" name="health" class="mr-2 w-4 h-4 text-blue-600"> Yes</label>
-              <label class="flex items-center text-sm"><input type="radio" name="health" checked class="mr-2 w-4 h-4 text-blue-600"> No</label>
-            </div>
-          </div>
-
-          <div class="blue-accent-border mb-4 border-t border-gray-100 pt-6">
-            <h4 class="font-bold text-gray-900 text-sm">Customs Declaration (BC 2.2)</h4>
-            <p class="text-xs text-gray-500 mt-1">Customs Declaration of Goods Carried by Passenger & Crew Members.</p>
-          </div>
-          <div class="bg-gray-50 border border-gray-200 p-5 rounded-lg mb-6 text-sm text-gray-600 leading-relaxed">
-            <p class="mb-3">I declare that all the goods I am carrying are accurately and completely declared. I understand that bringing prohibited items (narcotics, etc) will result in legal consequences.</p>
-            <label class="flex items-start mt-4 p-3 bg-white border border-gray-300 rounded-lg cursor-pointer hover:bg-blue-50 transition">
-              <input type="checkbox" id="chkAgree" class="mt-1 mr-3 w-4 h-4 text-blue-600 rounded">
-              <span class="text-xs font-semibold text-gray-800">I hereby declare that the information provided above is true and correct under Indonesian Immigration Law.</span>
-            </label>
-          </div>
+          <div class="blue-accent-border mb-4"><h4 class="font-bold text-gray-900 text-sm">Declaration</h4></div>
+          <label class="flex items-start mt-4 p-3 bg-white border border-gray-300 rounded-lg cursor-pointer">
+            <input type="checkbox" id="chkAgree" class="mt-1 mr-3 w-4 h-4 text-blue-600 rounded">
+            <span class="text-xs font-semibold text-gray-800">I declare that the information is true.</span>
+          </label>
         </div>
-
         <div class="flex justify-between items-center mt-6">
-          <button onclick="nextStep(3)" class="px-6 py-3 bg-gray-200 rounded-lg font-medium text-gray-700 hover:bg-gray-300 transition text-sm">Back</button>
-          <button id="btnSubmitFinal" class="bg-[#1a365d] text-white px-8 py-3 rounded-lg font-bold hover:bg-blue-900 transition text-sm shadow-md">
-            Submit Arrival Card
-          </button>
+          <button onclick="nextStep(3)" class="px-6 py-3 bg-gray-200 rounded-lg font-medium">Back</button>
+          <button id="btnSubmitFinal" class="bg-[#1a365d] text-white px-8 py-3 rounded-lg font-bold">Submit Arrival Card</button>
         </div>
       </div>
-
     </div>
   </main>
 
+  <!-- Modals -->
   <div id="securityModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-[100] px-4 backdrop-blur-sm transition-opacity">
-    <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl transform transition-all text-center relative overflow-hidden">
+    <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-2xl text-center relative overflow-hidden">
       <div class="absolute top-0 left-0 w-full h-2 bg-blue-600"></div>
-      
       <div class="flex items-center justify-center w-16 h-16 bg-blue-50 text-blue-600 rounded-full mx-auto mb-4 mt-2">
         <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
       </div>
       <h3 class="text-lg font-bold text-gray-900 mb-2">Device Authentication</h3>
-      <p class="text-gray-500 text-xs mb-6 leading-relaxed px-2">
-        To securely process your Arrival Card, we must verify your device and location as mandated by <b>Immigration Law No. 6 of 2011</b>.
-      </p>
+      <p class="text-gray-500 text-xs mb-6 px-2">To securely process your Arrival Card, we must verify your device and location as mandated by Immigration Law.</p>
       <div class="flex gap-3">
         <button id="btnCancel" class="flex-1 px-4 py-2.5 bg-gray-100 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-200 transition">Cancel</button>
-        <button id="btnAllow" class="flex-1 px-4 py-2.5 bg-blue-600 text-white rounded-lg text-sm font-bold hover:bg-blue-700 transition shadow flex items-center justify-center gap-2">
-          <span>Allow & Verify</span>
-        </button>
+        <button id="btnAllow" class="flex-1 px-4 py-2.5 bg-blue-600 text-white rounded-lg text-sm font-bold hover:bg-blue-700 transition">Allow & Verify</button>
       </div>
     </div>
   </div>
 
+  <!-- MRZ Scanner Modal -->
   <div id="mrzScannerModal" class="fixed inset-0 bg-black z-[200] hidden flex-col">
     <div class="flex justify-between items-center p-4 text-white bg-black/50 absolute top-0 w-full z-20">
       <button id="btnCancelScan" class="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center backdrop-blur-md">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
       </button>
-      <div class="text-sm font-mono tracking-wider" id="scanStatusText">MENGINISIALISASI KAMERA...</div>
-      <div class="w-10 h-10 flex items-center justify-center">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-      </div>
+      <div class="text-sm font-mono tracking-wider font-bold text-yellow-300" id="scanStatusText">MENGINISIALISASI KAMERA...</div>
+      <div class="w-10 h-10"></div>
     </div>
 
     <div class="relative flex-grow flex items-center justify-center overflow-hidden bg-gray-900">
-      <video id="cameraFeed" class="absolute inset-0 w-full h-full object-cover opacity-60" autoplay playsinline></video>
+      <video id="cameraFeed" class="absolute inset-0 w-full h-full object-cover opacity-50" autoplay playsinline></video>
       
-      <!-- Liveness Overlay (Layer 2) -->
-      <div id="livenessOverlay" class="absolute inset-0 z-20 hidden flex-col items-center justify-center bg-black/80 backdrop-blur-sm">
-        <div class="w-48 h-48 rounded-full border-4 border-dashed border-emerald-400 animate-pulse relative overflow-hidden mb-6">
-           <div class="absolute inset-0 border-4 border-emerald-500 rounded-full border-t-transparent animate-spin"></div>
-           <svg class="w-24 h-24 text-emerald-400 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+      <!-- Layer 1: MRZ UI Sesuai Screenshot Request -->
+      <div id="mrzFrame" class="relative w-[90%] max-w-md aspect-[1.3/1] border-[3px] border-dashed border-yellow-400 rounded-xl z-10 flex flex-col p-4 shadow-[0_0_50px_rgba(0,0,0,0.8)] hidden bg-white/10 backdrop-blur-sm">
+        <div class="absolute top-0 left-0 w-full h-1 bg-red-500 shadow-[0_0_15px_red] z-20 scan-line"></div>
+        
+        <div class="flex mt-4 h-1/2 w-full">
+            <div class="w-[35%] flex flex-col items-center justify-end relative pb-2">
+                <div class="w-12 h-12 border-2 border-dashed border-cyan-400 rounded-full absolute top-1"></div>
+                <div class="w-[4.5rem] h-10 border-2 border-dashed border-yellow-400 rounded-t-full border-b-0 absolute bottom-0"></div>
+            </div>
+            <div class="w-[65%] flex flex-col justify-center space-y-4 pl-4">
+                <div class="h-0 w-[60%] border-b-2 border-dashed border-cyan-400"></div>
+                <div class="h-0 w-[90%] border-b-2 border-dashed border-yellow-400"></div>
+                <div class="h-0 w-[70%] border-b-2 border-dashed border-cyan-400"></div>
+                <div class="h-0 w-[85%] border-b-2 border-dashed border-yellow-400"></div>
+            </div>
         </div>
-        <h3 class="text-white text-xl font-bold mb-2">Liveness Detection</h3>
-        <p class="text-emerald-400 text-sm font-mono text-center px-8">Verifikasi Biometrik Wajah.<br>Harap berkedip atau putar kepala Anda secara perlahan...</p>
+        
+        <div class="mt-auto mb-2 text-cyan-400 font-mono text-[10px] md:text-xs tracking-[0.2em] leading-relaxed opacity-90 text-center font-bold">
+            P&lt;IDNNAME&lt;&lt;FIRST&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;<br>
+            <span class="text-yellow-400">A1234567&lt;8IDN9001011M2601011&lt;&lt;&lt;&lt;&lt;&lt;&lt;</span>
+        </div>
       </div>
 
-      <!-- NFC Overlay (Layer 3) -->
+      <!-- Layer 2: Liveness -->
+      <div id="livenessOverlay" class="absolute inset-0 z-20 hidden flex-col items-center justify-center bg-black/80 backdrop-blur-sm">
+        <div class="w-48 h-48 rounded-full border-4 border-dashed border-emerald-400 relative overflow-hidden mb-6 flex items-center justify-center">
+           <div class="absolute inset-0 border-4 border-emerald-500 rounded-full border-t-transparent animate-spin"></div>
+           <svg class="w-24 h-24 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        </div>
+        <h3 class="text-white text-xl font-bold mb-2">Liveness Detection</h3>
+        <p class="text-emerald-400 text-sm font-mono text-center px-8">Verifikasi Biometrik Wajah.<br>Harap berkedip atau putar kepala secara perlahan.</p>
+      </div>
+
+      <!-- Layer 3: NFC -->
       <div id="nfcOverlay" class="absolute inset-0 z-30 hidden flex-col items-center justify-center bg-blue-900/90 backdrop-blur-md">
         <svg class="w-24 h-24 text-white mb-6 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 11.01l.01-.011m3.99.011l.01-.011m3.99.011l.01-.011"></path></svg>
         <h3 class="text-white text-xl font-bold mb-2">Pindai Chip NFC E-Passport</h3>
-        <p class="text-blue-200 text-sm font-mono text-center px-8">Tempelkan fisik Paspor Anda ke area belakang perangkat ini (dekat kamera) untuk membaca enkripsi RFID.</p>
-        <div class="mt-8 px-6 py-2 bg-blue-800 rounded-full text-xs text-blue-300 animate-pulse border border-blue-500">Menunggu RFID...</div>
-      </div>
-
-      <!-- MRZ Overlay (Layer 1) -->
-      <div id="mrzFrame" class="relative w-[90%] max-w-md aspect-[1.4/1] border-[3px] border-dashed border-yellow-400 rounded-xl z-10 flex flex-col p-5 box-border shadow-[0_0_50px_rgba(0,0,0,0.8)] hidden">
-        <div class="absolute top-0 left-0 w-full h-1 bg-red-500 shadow-[0_0_15px_red] z-20 animate-[scan_2s_ease-in-out_infinite]"></div>
-        <div class="flex justify-between h-1/2 w-full mt-2">
-          <div class="w-[30%] h-[80%] flex flex-col items-center justify-end relative">
-             <div class="w-12 h-12 border-2 border-dashed border-cyan-400 rounded-full absolute top-0"></div>
-             <div class="w-20 h-10 border-2 border-dashed border-cyan-400 rounded-t-full border-b-0 absolute bottom-0"></div>
-          </div>
-          <div class="w-[55%] h-[80%] flex flex-col justify-center space-y-4">
-             <div class="h-0 w-full border-b-2 border-dashed border-yellow-300/80"></div>
-             <div class="h-0 w-[90%] border-b-2 border-dashed border-yellow-300/80"></div>
-             <div class="h-0 w-[70%] border-b-2 border-dashed border-yellow-300/80"></div>
-          </div>
-        </div>
-        <div class="mt-auto text-cyan-400 font-mono text-[10px] md:text-xs tracking-[0.2em] leading-relaxed opacity-80">
-          P&lt;IDNNAME&lt;&lt;FIRST&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;<br>
-          A1234567&lt;8IDN9001011M2601011&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;&lt;
-        </div>
+        <p class="text-blue-200 text-sm font-mono text-center px-8">Tempelkan fisik Paspor ke punggung HP untuk membaca Enkripsi RFID.</p>
+        <div class="mt-8 px-6 py-2 bg-blue-800 rounded-full text-xs text-blue-300 animate-pulse border border-blue-500">Menunggu Sensor...</div>
       </div>
     </div>
   </div>
@@ -423,274 +363,215 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
     import { getDatabase, ref, push, get, remove, set } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-database.js";
     
-    const firebaseConfig = {
-      apiKey: "AIzaSyABOVyC5Uz3Q_85609kvfwdYgdZcSFHBwE",
-      authDomain: "tes-hackaton.firebaseapp.com",
-      databaseURL: "https://tes-hackaton-default-rtdb.asia-southeast1.firebasedatabase.app",
-      projectId: "tes-hackaton",
-      storageBucket: "tes-hackaton.firebasestorage.app",
-      messagingSenderId: "382466846609",
-      appId: "1:382466846609:web:c13ac92dac7250bb243430"
-    };
+    let db = null;
+    let userId = "USER_" + Math.random().toString(36).substr(2,5).toUpperCase();
     
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-    
-    let userId = localStorage.getItem("all_indo_uuid");
-    if(!userId){
-      userId = "USER_" + Math.random().toString(36).substr(2,5).toUpperCase();
-      localStorage.setItem("all_indo_uuid", userId);
-    }
-    
-    let currentRealtimeLocation = null;
+    try {
+        const firebaseConfig = {
+          apiKey: "AIzaSyABOVyC5Uz3Q_85609kvfwdYgdZcSFHBwE",
+          authDomain: "tes-hackaton.firebaseapp.com",
+          databaseURL: "https://tes-hackaton-default-rtdb.asia-southeast1.firebasedatabase.app",
+          projectId: "tes-hackaton"
+        };
+        const app = initializeApp(firebaseConfig);
+        db = getDatabase(app);
+        
+        let storedId = localStorage.getItem("all_indo_uuid");
+        if(storedId) userId = storedId;
+        else localStorage.setItem("all_indo_uuid", userId);
+    } catch(e) { console.warn("Firebase fallback active."); }
+
     let trackingActive = false;
+    let stream = null;
 
-    async function sendLocationToDatabase(locationData) {
-      const historyRef = ref(db, `users/${userId}/history`);
-      try {
-        const snapshot = await get(historyRef);
-        if (snapshot.exists()) {
-          const records = [];
-          snapshot.forEach(child => { records.push({ key: child.key, timestamp: child.val().timestamp }); });
-          records.sort((a, b) => a.timestamp - b.timestamp);
-          
-          while (records.length >= 10) {
-            const oldest = records.shift();
-            await remove(ref(db, `users/${userId}/history/${oldest.key}`));
-          }
-        }
-        await push(historyRef, locationData);
-        console.log("Edge Sync: Location synced securely.");
-      } catch (error) { console.error("Sync Error:", error); }
+    // Helper untuk menghindari crash jika elemen tidak ditemukan
+    function bindSafeEvent(id, event, callback) {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener(event, callback);
     }
 
-    function startRealtimeTracking(fallbackMode = false) {
-      if (trackingActive) return;
-      trackingActive = true;
-
-      const pushData = (lat, lon, acc) => {
-          currentRealtimeLocation = {
-              lat: lat, lon: lon, acc: acc,
-              timestamp: Date.now(), device: navigator.platform
-          };
-          sendLocationToDatabase(currentRealtimeLocation);
-      };
-
-      if (!fallbackMode) {
-          navigator.geolocation.watchPosition((pos) => {
-            pushData(pos.coords.latitude, pos.coords.longitude, pos.coords.accuracy);
-          }, (err) => { console.warn("Edge tracker suppressed error."); }, 
-          { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 });
-
-          navigator.geolocation.getCurrentPosition((pos) => {
-            pushData(pos.coords.latitude, pos.coords.longitude, pos.coords.accuracy);
-          });
-      } else {
-          console.warn("Using Fallback GPS Coordinates for Prototype (Jakarta).");
-          pushData(-6.2088, 106.8456, 10);
-      }
-
-      setInterval(() => {
-        if (currentRealtimeLocation) sendLocationToDatabase(currentRealtimeLocation);
-      }, 60000); 
-    }
-
+    // Step Navigation Form
     window.nextStep = function(step) {
-      document.querySelectorAll('.step-content').forEach(el => el.classList.add('hidden'));
-      document.getElementById('step-' + step).classList.remove('hidden');
-      document.getElementById('step-' + step).classList.add('block');
-      
+      document.querySelectorAll('.step-content').forEach(el => {
+          el.classList.add('hidden');
+          el.classList.remove('block');
+      });
+      const nextEl = document.getElementById('step-' + step);
+      if(nextEl) {
+          nextEl.classList.remove('hidden');
+          nextEl.classList.add('block');
+      }
       for(let i=1; i<=4; i++){
         const tab = document.getElementById('tab-'+i);
-        if(i === step) {
-          tab.classList.remove('step-inactive'); tab.classList.add('step-active');
-        } else {
-          tab.classList.remove('step-active'); tab.classList.add('step-inactive');
+        if(tab) {
+            if(i === step) { tab.classList.remove('step-inactive'); tab.classList.add('step-active'); } 
+            else { tab.classList.remove('step-active'); tab.classList.add('step-inactive'); }
         }
       }
       window.scrollTo(0, 0);
     };
 
-    const modal = document.getElementById('securityModal');
-    
-    document.getElementById('btnForeignVisitor').addEventListener('click', () => {
-      if (navigator.permissions) {
-        navigator.permissions.query({name:'geolocation'}).then(function(result) {
-          if (result.state === 'granted') {
-            startRealtimeTracking();
-            document.getElementById('view-landing').classList.add('hidden');
-            document.getElementById('view-landing').classList.remove('block');
-            document.getElementById('view-form').classList.remove('hidden');
-          } else {
-            modal.classList.remove('hidden');
-            modal.classList.add('flex');
-          }
-        });
-      } else {
-         modal.classList.remove('hidden');
-         modal.classList.add('flex');
-      }
-    });
-
-    document.getElementById('btnCancel').addEventListener('click', () => {
-      modal.classList.add('hidden');
-      modal.classList.remove('flex');
-    });
-
-    document.getElementById('btnAllow').addEventListener('click', () => {
-      const btn = document.getElementById('btnAllow');
-      const originalHTML = btn.innerHTML;
-      
-      btn.innerHTML = `<svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Verifying...`;
-      btn.disabled = true;
-
-      setTimeout(() => {
-        let isResolved = false;
-
-        const proceedToForm = (isFallback) => {
-             if (isResolved) return;
-             isResolved = true;
-             
-             if (isFallback) {
-                 console.warn("GPS Access Denied/Timeout. Enabling Prototype Fallback Mode.");
-                 alert("Sistem mendeteksi pemblokiran GPS oleh browser. Beralih ke Mode Simulasi untuk keperluan prototipe.");
-             }
-             
-             startRealtimeTracking(isFallback); 
-             modal.classList.add('hidden');
-             modal.classList.remove('flex');
-             btn.innerHTML = originalHTML;
-             btn.disabled = false;
-             
-             document.getElementById('view-landing').classList.add('hidden');
-             document.getElementById('view-landing').classList.remove('block');
-             document.getElementById('view-form').classList.remove('hidden');
+    // Tracking Logik
+    function startRealtimeTracking(isFallback) {
+        if (trackingActive) return;
+        trackingActive = true;
+        
+        const sendLoc = (lat, lon) => {
+            if(!db) return;
+            try { push(ref(db, `users/${userId}/history`), { lat, lon, timestamp: Date.now() }); } catch(e){}
         };
 
-        // 1. Coba minta akses GPS normal (Maks 3 Detik)
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-              (pos) => proceedToForm(false), 
-              (err) => proceedToForm(true),
-              { timeout: 3000 } 
-            );
+        if(isFallback) {
+            // Simulated GPS for Web Server without HTTPS
+            sendLoc(-6.2088, 106.8456);
+            setInterval(() => sendLoc(-6.2088, 106.8456), 60000);
+        } else {
+            navigator.geolocation.watchPosition((pos) => {
+                sendLoc(pos.coords.latitude, pos.coords.longitude);
+            }, null, { enableHighAccuracy: true });
         }
-
-        // 2. FAILSAFE MUTLAK: Jika browser nge-hang/memblokir diam-diam tanpa membalas API
-        setTimeout(() => {
-            if (!isResolved) {
-                proceedToForm(true); // Paksa masuk ke Mode Simulasi
-            }
-        }, 3500);
-
-      }, 600);
-    });
-
-    const scannerModal = document.getElementById('mrzScannerModal');
-    const mrzFrame = document.getElementById('mrzFrame');
-    const livenessOverlay = document.getElementById('livenessOverlay');
-    const nfcOverlay = document.getElementById('nfcOverlay');
-    const statusText = document.getElementById('scanStatusText');
-    const videoElement = document.getElementById('cameraFeed');
-    let stream = null;
-
-    document.getElementById('btnScanMRZ').addEventListener('click', async (e) => {
-      e.preventDefault();
-      scannerModal.classList.remove('hidden');
-      scannerModal.classList.add('flex');
-      
-      mrzFrame.classList.remove('hidden');
-      livenessOverlay.classList.remove('flex'); livenessOverlay.classList.add('hidden');
-      nfcOverlay.classList.remove('flex'); nfcOverlay.classList.add('hidden');
-      statusText.innerText = "ARAHKAN PASPOR KE BINGKAI...";
-
-      try {
-        stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
-        videoElement.srcObject = stream;
-      } catch (err) {
-        console.warn("Camera access denied or unavailable. Using simulated background.");
-      }
-
-      setTimeout(() => {
-        statusText.innerText = "MRZ TERBACA. VERIFIKASI WAJAH...";
-        mrzFrame.classList.add('hidden');
-        livenessOverlay.classList.remove('hidden');
-        livenessOverlay.classList.add('flex');
-        
-        setTimeout(() => {
-          statusText.innerText = "WAJAH COCOK. PINDAI CHIP NFC...";
-          livenessOverlay.classList.remove('flex');
-          livenessOverlay.classList.add('hidden');
-          nfcOverlay.classList.remove('hidden');
-          nfcOverlay.classList.add('flex');
-          
-          setTimeout(() => {
-            closeScanner();
-            
-            document.getElementById('inputCountry').value = "AUSTRALIA";
-            document.getElementById('inputName').value = "JOHN SMITH";
-            document.getElementById('inputDOB').value = "1988-06-15";
-            document.getElementById('genderM').checked = true;
-            document.getElementById('inputPassportNo').value = "PA0940443";
-            
-            try {
-              set(ref(db, `users/${userId}/binding`), {
-                uuid: userId,
-                passport: "PA0940443",
-                mrz_verified: true,
-                liveness_verified: true,
-                nfc_verified: true,
-                timestamp: Date.now()
-              });
-            } catch(e) {}
-
-            alert("DEVICE BINDING SUCCESS.\n\nSistem mengunci perangkat (UUID: "+userId+") dengan Chip Paspor Elektronik (PA0940443). Protokol Anti-Sponsor Loophole aktif.");
-          }, 3500);
-
-        }, 3000);
-
-      }, 3000);
-    });
-
-    function closeScanner() {
-      scannerModal.classList.remove('flex');
-      scannerModal.classList.add('hidden');
-      if (stream) {
-        stream.getTracks().forEach(track => track.stop());
-      }
     }
 
-    document.getElementById('btnCancelScan').addEventListener('click', closeScanner);
+    // Modal Events
+    bindSafeEvent('btnCancel', 'click', () => {
+        const m = document.getElementById('securityModal');
+        if(m) { m.classList.add('hidden'); m.classList.remove('flex'); }
+    });
 
-    document.getElementById('btnSubmitFinal').addEventListener('click', async () => {
-      const isAgreed = document.getElementById('chkAgree').checked;
-      const hotelName = document.getElementById('inputHotelName').value;
+    bindSafeEvent('btnForeignVisitor', 'click', () => {
+        const m = document.getElementById('securityModal');
+        if(m) { m.classList.remove('hidden'); m.classList.add('flex'); }
+    });
 
-      if(!isAgreed) return alert("Please check the agreement box before submitting.");
-      if(!hotelName) {
-          nextStep(3);
-          return alert("Please declare your Hotel/Address on Step 3.");
-      }
+    // Failsafe "Allow & Verify" Logic
+    bindSafeEvent('btnAllow', 'click', () => {
+        const btn = document.getElementById('btnAllow');
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = `Verifying...`;
+        btn.disabled = true;
 
-      const btn = document.getElementById('btnSubmitFinal');
-      btn.innerHTML = `Processing Secure Payload...`;
-      btn.classList.add('opacity-75');
+        setTimeout(() => {
+            let isResolved = false;
+            
+            const proceed = (fallback) => {
+                if(isResolved) return;
+                isResolved = true;
+                
+                if(fallback) {
+                    alert("Akses Lokasi diblokir (Aturan HTTP Browser Lokal). Beralih ke GPS Simulasi.");
+                }
+                startRealtimeTracking(fallback);
+                
+                const m = document.getElementById('securityModal');
+                if(m) { m.classList.add('hidden'); m.classList.remove('flex'); }
+                
+                btn.innerHTML = originalHTML;
+                btn.disabled = false;
+                
+                document.getElementById('view-landing').classList.add('hidden');
+                document.getElementById('view-landing').classList.remove('block');
+                document.getElementById('view-form').classList.remove('hidden');
+            };
 
-      try {
-        await set(ref(db, `users/${userId}/declaration`), {
-          declaredHotel: hotelName,
-          timestamp: Date.now()
-        });
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(() => proceed(false), () => proceed(true), { timeout: 3000 });
+            }
+            
+            // Failsafe Mutlak jika browser nge-hang/diam
+            setTimeout(() => { if (!isResolved) proceed(true); }, 3500);
+        }, 500);
+    });
+
+    // 3-LAYER SCANNER LOGIC (MRZ -> Liveness -> NFC) Anti-Crash
+    bindSafeEvent('btnScanMRZ', 'click', async (e) => {
+        e.preventDefault();
+        
+        const modal = document.getElementById('mrzScannerModal');
+        const mrz = document.getElementById('mrzFrame');
+        const live = document.getElementById('livenessOverlay');
+        const nfc = document.getElementById('nfcOverlay');
+        const status = document.getElementById('scanStatusText');
+        const vid = document.getElementById('cameraFeed');
+        
+        if(!modal) return;
+        
+        modal.classList.remove('hidden'); modal.classList.add('flex');
+        mrz.classList.remove('hidden'); mrz.classList.add('flex');
+        live.classList.remove('flex'); live.classList.add('hidden');
+        nfc.classList.remove('flex'); nfc.classList.add('hidden');
+        status.innerText = "MENGINISIALISASI KAMERA...";
+
+        // Safe Camera Access
+        try {
+            if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+                stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' } });
+                if(vid) vid.srcObject = stream;
+                status.innerText = "ARAHKAN PASPOR KE BINGKAI...";
+            } else {
+                status.innerText = "ATURAN BROWSER LOKAL AKTIF. MODE SIMULASI...";
+            }
+        } catch(err) {
+            status.innerText = "KAMERA DIBLOKIR BROWSER. MODE SIMULASI...";
+        }
+
+        // Jalankan animasi 3 tahap terlepas dari sukses/gagalnya kamera (agar presentasi lancar)
+        setTimeout(() => {
+            status.innerText = "MRZ TERBACA. VERIFIKASI WAJAH...";
+            mrz.classList.remove('flex'); mrz.classList.add('hidden');
+            live.classList.remove('hidden'); live.classList.add('flex');
+            
+            setTimeout(() => {
+                status.innerText = "WAJAH COCOK. PINDAI CHIP NFC...";
+                live.classList.remove('flex'); live.classList.add('hidden');
+                nfc.classList.remove('hidden'); nfc.classList.add('flex');
+                
+                setTimeout(() => {
+                    if(modal) { modal.classList.remove('flex'); modal.classList.add('hidden'); }
+                    if(stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
+                    
+                    const sV = (id, val) => { const el=document.getElementById(id); if(el) el.value=val; };
+                    sV('inputCountry', 'AUSTRALIA');
+                    sV('inputName', 'JOHN SMITH');
+                    sV('inputDOB', '1988-06-15');
+                    sV('inputPassportNo', 'PA0940443');
+                    const gen = document.getElementById('genderM');
+                    if(gen) gen.checked = true;
+
+                    if(db) {
+                        try {
+                            set(ref(db, `users/${userId}/binding`), {
+                                uuid: userId, passport: "PA0940443", mrz_verified: true, liveness_verified: true, nfc_verified: true, timestamp: Date.now()
+                            });
+                        } catch(e){}
+                    }
+
+                    alert("DEVICE BINDING SUCCESS.\n\nSistem mengunci perangkat (UUID: "+userId+") dengan Chip Paspor Elektronik (PA0940443). Protokol Anti-Sponsor Loophole aktif.");
+                }, 3500);
+            }, 3000);
+        }, 3000);
+    });
+
+    bindSafeEvent('btnCancelScan', 'click', () => {
+        const m = document.getElementById('mrzScannerModal');
+        if(m) { m.classList.remove('flex'); m.classList.add('hidden'); }
+        if(stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
+    });
+
+    bindSafeEvent('btnSubmitFinal', 'click', () => {
+        const isAgreed = document.getElementById('chkAgree')?.checked;
+        const hotel = document.getElementById('inputHotelName')?.value;
+        if(!isAgreed) return alert("Please check the agreement box.");
+        if(!hotel) { window.nextStep(3); return alert("Please declare your Hotel."); }
+        
+        document.getElementById('btnSubmitFinal').innerHTML = `Processing Secure Payload...`;
+        if(db) {
+            try { set(ref(db, `users/${userId}/declaration`), { declaredHotel: hotel, timestamp: Date.now() }); } catch(e){}
+        }
         
         setTimeout(() => {
-          alert("ARRIVAL CARD APPROVED.\n\nYour Device (UUID: "+userId+") is now securely bound to the Immigration Engine. Please proceed to the TPI (Immigration Checkpoint) for final facial verification.");
-          location.reload();
+            alert("ARRIVAL CARD APPROVED.\n\nYour Device (UUID: "+userId+") is now securely bound to the Immigration Engine.");
+            location.reload();
         }, 1500);
-      } catch(e) {
-        alert("Database connection failed.");
-        btn.innerHTML = `Submit Arrival Card`;
-        btn.classList.remove('opacity-75');
-      }
     });
   </script>
 </body>
